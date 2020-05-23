@@ -1,28 +1,72 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <VueNav v-if="returned" v-bind:branches="branches" v-bind:tabs="tabs"></VueNav>
+    <router-view v-if="returned" v-bind:branches="branches" v-bind:tabs="tabs" />
+    <VueFooter v-if="returned" v-bind:branches="branches" v-bind:tabs="tabs" ></VueFooter>
   </div>
 </template>
 
+
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import axios from "@/plugins/axios.js";
+import VueNav from '@/components/layout/nav.vue'
+import VueFooter from '@/components/layout/footer.vue'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
-  }
+    VueNav,
+    VueFooter
+  },
+  data(){
+    return{
+      branches: null,
+      tabs: null,
+      returned: false,
+    }
+  },
+  created(){
+    axios
+          .get("/info") 
+          .then(response => {
+            this.returned = true;
+            if (response.status === 200) {
+               this.branches = response.data.branches;
+               this.tabs = response.data.tabs;
+            }else{
+                this.$bvToast.toast("Unknown", {
+                title: "Error",
+                autoHideDelay: 5000,
+                appendToast: true
+              });
+            }
+          }).catch(error =>{
+             this.$bvToast.toast(error + "", {
+                title: "Error",
+                autoHideDelay: 5000,
+                appendToast: true
+          });
+          });
+  } 
 }
 </script>
 
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.navbar{
+  padding: 0;
 }
+
+main.page{
+  padding-top: 122px !important;
+}
+
+@media (min-width: 576px){
+main.page{
+  padding-top: 144px !important;
+}
+}
+
 </style>
+
+

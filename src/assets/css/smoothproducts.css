@@ -1,0 +1,26 @@
+html, body {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+main{
+  display: flex !important;
+  flex-direction: column;
+  flex: 1 1;
+}
+
+div#app{
+  display: flex !important;
+  flex-direction: column;
+  flex: 1 1;
+}
+
+main section:first-of-type{
+  flex: 1 1;
+}
+
+.flex-fill.dark{
+  background-color: #f6f6f6;
+}
