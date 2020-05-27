@@ -6,7 +6,7 @@ session_start();
 
 if (isset($_POST["eventName"]) && isset($_POST["branchName"])) {
     try {
-        if(isset($_SESSION["user"]) && $_SESSION["user"]["activated"] && ($_SESSION["user"]["admin"] || sizeof($_SESSION["user"]["branches"]) > 0)){
+        if(isset($_SESSION["user"]) && $_SESSION["user"]["activated"] && (($_SESSION["user"]["admin"] || sizeof($_SESSION["user"]["branches"]) > 0))){
             $pdoResult = db::getInstance()->preparedQuery("SELECT * FROM `event` where eventName = ? and branchName = ?",[$_POST["eventName"], $_POST["branchName"]]);
         }else{
             $pdoResult = db::getInstance()->preparedQuery("SELECT * FROM `event` where visible = 1 and eventName = ? and branchName = ?",[$_POST["eventName"], $_POST["branchName"]]);

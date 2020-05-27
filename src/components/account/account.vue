@@ -3,10 +3,10 @@
     <h1>Account</h1>
     <b-row>
       <b-col class="col-sm-6">
-        <div v-if="userBranches.length != 0">
+        <div v-if="branches.length != 0">
           <p>U beheert de tak(ken):</p>
           <ul>
-            <li v-for="branch in userBranches" :key="branch.branchName">
+            <li v-for="branch in branches" :key="branch.branchName">
               {{ branch.branchName }}
               <b-button variant="primary" size="sm" @click="editBranch(branch)">
                 <span>Aanpassen</span>
@@ -43,19 +43,6 @@ import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 export default {
   name: "logOut",
   props: ["user", "branches"],
-  computed: {
-    userBranches() {
-      var branches = [];
-      for (var i = 0; i < this.branches.length; i++) {
-        if (this.branches[i].branchAdmin === this.user.email) {
-          branches.push({
-            branchName: this.branches[i].branchName
-          });
-        }
-      }
-      return branches;
-    }
-  },
   methods: {
     logOut() {
       axios

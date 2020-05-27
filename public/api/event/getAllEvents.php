@@ -3,7 +3,7 @@ function event_getall(){
     include_once "databaseAccess.php";
 session_start();
     try {
-        if(isset($_SESSION["user"]) && $_SESSION["user"]["activated"] && ($_SESSION["user"]["admin"] || sizeof($_SESSION["user"]["branches"]) > 0)){
+        if(isset($_SESSION["user"]) && $_SESSION["user"]["activated"] && (($_SESSION["user"]["admin"] || sizeof($_SESSION["user"]["branches"]) > 0))){
             $pdoResult = db::getInstance()->executeQuery("SELECT * FROM `event`");
         }else{
             $pdoResult = db::getInstance()->executeQuery("SELECT * FROM `event` where visible = 1");
