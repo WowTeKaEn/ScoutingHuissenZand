@@ -7,7 +7,7 @@
       <b-input class="mt-3" v-model="branch.instaUsername" placeholder="Instagram Gebruikersnaam"></b-input>
       <b-input class="mt-3" v-model="branch.facebookUsername" placeholder="Facebook Gebruikersnaam"></b-input>
       <p class="mt-3">Gebruikers namen worden gebruikt als links en om foto's op te halen. Facebook heeft prioriteit omdat deze hogere kwaliteit foto's heeft.
-        Check na het invullen, de homepagina of speltak pagina of deze goed werkt.
+        Check na het invullen de homepagina of speltak pagina of deze goed werkt.
       </p>
       <b-form-checkbox
         v-model="branch.visible"

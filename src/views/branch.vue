@@ -4,42 +4,37 @@
       <b-container>
         <h1>{{ branchName }}</h1>
         <b-card class="clean-card">
-          <article v-if="returned" class="ql-editor" v-html="compiledHtml"></article>
-          <div v-else class="d-flex justify-content-center">
-            <span class="my-auto">
-              <b-spinner variant="primary" label="Spinning"></b-spinner>
-            </span>
+          <quillViewer v-bind:ready="returned" v-bind:quill="branch.branchDescription"></quillViewer>
+          <hr />
+          <h2>Kalender</h2>
+          <calendarViewer v-bind:ready="calendarReturned" v-bind:events="events"></calendarViewer>
+          <div class="d-flex mt-3">
+          <ul class="list-inline social-buttons mx-auto">
+            <li v-if="branch.instaUsername != ''" class="list-inline-item">
+              <a class="social-link" :href="'https://www.instagram.com/' + branch.instaUsername">
+                <i class="fab fa-instagram fa-2x"></i>
+              </a>
+            </li>
+            <li v-if="branch.facebookUsername != ''" class="list-inline-item">
+              <a class="social-link" :href="'https://www.facebook.com/' + branch.facebookUsername">
+                <i class="fab fa-facebook fa-2x"></i>
+              </a>
+            </li>
+          </ul>
           </div>
+          <div
+            class="fb-comments"
+            :data-href="'http://www.scoutinghuissenzand.space/#scoutinghuissenzand'+ branchName"
+            data-numposts="10"
+            data-width="fluid"
+          ></div>
         </b-card>
-        <teammember class="mt-5" v-if="returned" v-bind:branch="branch"></teammember>
-        <div
-          class="fb-comments"
-          :data-href="'http://www.scoutinghuissenzand.space/#scoutinghuissenzand'+ branchName"
-          data-numposts="10"
-          data-width="fluid"
-        ></div>
       </b-container>
     </section>
   </main>
 </template>
 
 <style lang="css">
-@import "~vue2-editor/dist/vue2-editor.css";
-
-/* Import the Quill styles you want */
-@import "~quill/dist/quill.core.css";
-@import "~quill/dist/quill.bubble.css";
-@import "~quill/dist/quill.snow.css";
-
-.card img {
-  padding: 0.25rem;
-  background-color: #fff;
-  border: 1px solid #dee2e6;
-  border-radius: 0.25rem;
-  max-width: 100%;
-  opacity: 1;
-}
-
 .page {
   background-color: #28a745;
 }
@@ -53,19 +48,23 @@
 import Vue from "vue";
 import axios from "@/plugins/axios.js";
 import router from "@/router/index.js";
-import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
-import teammember from "@/components/teammember.vue";
+import quillViewer from "@/components/content/quillViewer";
+// import teammember from "@/components/teammember.vue";
+import calendarViewer from "@/components/content/calendarViewer";
 
 export default {
   name: "branch",
   props: ["branchName"],
-  components: { teammember },
+  components: { calendarViewer, quillViewer },
   data() {
     return {
       branch: {},
       returned: false,
+      calendarReturned: false,
+      events: []
     };
   },
+  methods: {},
   created() {
     axios
       .post("/branch/get", { branchName: this.branchName })
@@ -75,11 +74,6 @@ export default {
           if (response.data == null) {
             router.push("/error/404");
           }
-          var converter = new QuillDeltaToHtmlConverter(
-            JSON.parse(response.data.branchDescription),
-            {multiLineParagraph: false, multiLineBlockquote: false, multiLineHeader: false, multiLineCodeblock: false}
-          );
-          response.data.branchDescription = converter.convert();
           this.branch = response.data;
         } else {
           router.push("/error/404");
@@ -93,16 +87,34 @@ export default {
         });
         router.push("/error/404");
       });
-    Vue.loadScript("https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.4").then(() => {
-      window.FB.XFBML.parse()
-    })
-
-    
-  },
-  computed: {
-    compiledHtml: function() {
-      return this.branch.branchDescription;
-    }
+    Vue.loadScript(
+      "https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.4"
+    ).then(() => {
+      window.FB.XFBML.parse();
+    });
+    axios
+      .post("/event/get/branch", { branchName: this.branchName })
+      .then(response => {
+        response.data.forEach(event => {
+          this.events.push({
+            title: event.eventName,
+            start: event.startDate,
+            end: event.endDate,
+            description: event.eventDescription
+          });
+        });
+        this.calendarReturned = true;
+      })
+      .catch(error => {
+        this.calendarReturned = true;
+        if (error.response.status != 404) {
+          this.$bvToast.toast("Kalender kon niet worden opgehaald", {
+            title: "Error",
+            autoHideDelay: 5000,
+            appendToast: true
+          });
+        }
+      });
   }
 };
 </script>

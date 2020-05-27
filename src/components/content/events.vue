@@ -1,5 +1,5 @@
 <template>
-  <b-card v-if="userBranches.length != 0" class="mb-3">
+  <b-card v-if="branches.length != 0" class="mb-3">
     <h1>Evenementen</h1>
     <b-form novalidate @submit.stop.prevent>
       <div class="form-group">
@@ -8,33 +8,45 @@
             <b-form-select-option disabled :value="null">-- Kies een speltak --</b-form-select-option>
           </template>
           <b-form-select-option
-            v-for="branch in userBranches"
+            v-for="branch in branches"
             :key="branch.branchName"
             :value="branch.branchName"
           >{{ branch.branchName }}</b-form-select-option>
         </b-form-select>
       </div>
       <div :key="branch" v-if="getBranch != null">
-        <div class="d-flex flex-column"   v-if="returnedEvents">
-          Evenementen van de {{ getBranch }}:
-            <ul>
-            <li v-for="eventf in branchEvents" :key="eventf.eventName">
-              {{ eventf.eventName }}
-              <b-button variant="primary" size="sm" @click="event = eventf">
-                <span>Aanpassen</span>
-              </b-button>
-            </li>
-          </ul>
-        <b-button variant="primary" class="ml-auto" @click="event = {}">Nieuw evenement aanmaken</b-button>
-        </div>
-        <span v-else>
-            <b-spinner variant="light" type="grow" label="Spinning"></b-spinner>
-          </span>
-
-
-
+        <FullCalendar
+          defaultView="dayGridMonth"
+          :editable="true"
+          :eventResizableFromStart="true"
+          :selectable="true"
+          :events="events"
+          :locale="nlLocale"
+          @eventDrop="handleEventDateChange"
+          @eventResize="handleEventDateChange"
+          @select="handleSelect"
+          @eventClick="handleEventSelect"
+          :plugins="calendarPlugins"
+          timeZone='UTC'
+          themeSystem='bootstrap'
+        />
       </div>
-      <event :key="event.eventName" class="mt-3" v-if="event" v-bind:event="event"  v-bind:branch="getBranch" v-bind:branchEvents="branchEvents"></event>
+      <b-modal  id="modal" :title="newEvent ? 'Nieuw Evenement':currentEvent.title ">
+      <event
+      @correct-submit="closeModal()"
+         v-if="currentEvent != null"
+        :key="currentEvent.title"
+        ref="eventEditor"
+        v-bind:event="currentEvent"
+        v-bind:branch="getBranch"
+        v-bind:events="events"
+      ></event>
+      <div slot="modal-footer" class="w-100 d-flex">
+        <b-button v-if="!newEvent" variant="danger" class="mr-3"  @click="deleteEvent()">Verwijderen</b-button>
+        <b-button variant="primary" class="ml-auto"  @click="$refs.eventEditor.attemptToSubmit()">Opslaan</b-button>
+      </div>
+      </b-modal>
+      
     </b-form>
   </b-card>
 </template>
@@ -48,60 +60,194 @@
 .asd__wrapper--full-screen {
   z-index: 100000 !important;
 }
+
+.fc-title {
+  color: white;
+}
+
+@import "~@fullcalendar/core/main.css";
+@import "~@fullcalendar/daygrid/main.css";
+@import "~@fullcalendar/bootstrap/main.css";
 </style>
 
 
 <script>
+import FullCalendar from "@fullcalendar/vue";
+import interactionPlugin from "@fullcalendar/interaction";
 import event from "./event";
 import axios from "@/plugins/axios.js";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import bootstrap from "@fullcalendar/bootstrap";
+import nlLocale from "@fullcalendar/core/locales/nl";
 
 export default {
   name: "events",
   props: ["user", "branches"],
-  components: { event },
+  components: { event, FullCalendar },
   data() {
     return {
       branch: null,
       returnedEvents: false,
-      branchEvents: null,
-      event: null,
+      currentEvent: null,
+      calendarPlugins: [dayGridPlugin, interactionPlugin, bootstrap],
+      nlLocale: nlLocale,
+      events: []
     };
   },
-  computed: {
-    userBranches() {
-      var branches = [];
-      for (var i = 0; i < this.branches.length; i++) {
-        if (this.branches[i].branchAdmin === this.user.email) {
-          branches.push({
-            branchName: this.branches[i].branchName
+  methods: {
+    deleteEvent(){
+        axios
+          .post("/event/delete", {
+            eventName: this.currentEvent.title,
+            branchName: this.branch,
+            startDate: this.currentEvent.start,
+            endDate: this.currentEvent.end
+          })
+          .then(response => {
+            if(response.status == 200){
+            this.events = this.events.filter(event => event.title != this.currentEvent.title || event.start != this.currentEvent.start.toISOString().split('T')[0] || event.end != this.currentEvent.end.toISOString().split('T')[0]);
+            this.$bvModal.hide("modal");
+              this.$bvToast.toast("Evenement verwijderd", {
+                title: "Succes",
+                autoHideDelay: 1000,
+                appendToast: true
+              });
+            } else {
+              this.$bvToast.toast("Unknown", {
+                title: "Error",
+                autoHideDelay: 1000,
+                appendToast: true
+              });
+            }
+          })
+          .catch(error => {
+            this.submitting = false;
+            if (error.response.status === 401) {
+              this.$bvToast.toast("Unauthorised", {
+                title: "Error",
+                autoHideDelay: 1000,
+                appendToast: true
+              });
+            } else {
+              this.$bvToast.toast(error + "", {
+                title: "Error",
+                autoHideDelay: 1000,
+                appendToast: true
+              });
+            }
           });
-        }
-      }
-      return branches;
     },
-    getBranch:{
-      get: function(){
+    closeModal(responseCode){
+      this.currentEvent = null;
+      this.$bvModal.hide("modal");
+      if(responseCode == 200){
+        this.$bvToast.toast("Bestaand evenement aangepast", {
+                title: "Succes",
+                autoHideDelay: 1000,
+                appendToast: true
+              });
+      }else if(responseCode == 201){
+        this.$bvToast.toast("Evenement aangemaakt", {
+                title: "Succes",
+                autoHideDelay: 1000,
+                appendToast: true
+              });
+      }
+    },
+    handleSelect(arg){
+      arg.start = arg.start.toISOString().split('T')[0]
+      arg.end = arg.end.toISOString().split('T')[0]
+        this.currentEvent = {title: null, start: arg.start, end: arg.end, extendedProps:{description:'[]', visible:0}}
+        this.$bvModal.show("modal");
+    },
+    handleEventSelect(arg) {
+      this.currentEvent = arg.event;
+      this.$bvModal.show("modal");
+    },
+    handleEventDateChange(arg) {
+      var previousEvent;
+      if(arg.oldEvent == null){
+          previousEvent = arg.prevEvent;
+      }else{
+        previousEvent = arg.oldEvent;
+      }
+       axios
+          .post("/event/update", {
+            eventName: arg.event.title,
+            startDate: arg.event.start,
+            endDate: arg.event.end,
+            branchName: this.branch,
+            prevStartDate: previousEvent.start,
+            prevEndDate: previousEvent.end
+          })
+          .then(response => {
+            if(response.status == 200){
+              var event = this.events.filter(event => event.title == arg.event.title && event.start == previousEvent.start.toISOString().split('T')[0] && event.end == previousEvent.end.toISOString().split('T')[0])[0];
+              event.start = arg.event.start.toISOString().split('T')[0];
+              event.end = arg.event.end.toISOString().split('T')[0];
+              this.$bvToast.toast("Bestaand evenement aangepast", {
+                title: "Succes",
+                autoHideDelay: 1000,
+                appendToast: true
+              });
+            } else {
+              this.$bvToast.toast("Unknown", {
+                title: "Error",
+                autoHideDelay: 1000,
+                appendToast: true
+              });
+            }
+          })
+          .catch(error => {
+            arg.revert();
+            this.submitting = false;
+            if (error.response.status === 401) {
+              this.$bvToast.toast("Unauthorised", {
+                title: "Error",
+                autoHideDelay: 1000,
+                appendToast: true
+              });
+            } else {
+              this.$bvToast.toast(error + "", {
+                title: "Error",
+                autoHideDelay: 1000,
+                appendToast: true
+              });
+            }
+          });
+    }
+  },
+  computed: {
+    newEvent(){
+      if(this.currentEvent != null && this.currentEvent.title != null){
+        return false
+      }
+      return true
+    },
+    getBranch: {
+      get: function() {
         return this.branch;
       },
-      set: function(val){
+      set: function(val) {
         this.returnedEvents = false;
-        this.branchEvents = null;
+        this.branchEvents = [];
         this.branch = val;
-        this.event = null;
+        this.currentEvent = null;
+        this.events = [];
         axios
-        .post("/event/get/branch", { branchName: this.getBranch })
-        .then(response => {
-          this.returnedEvents = true;
-          this.branchEvents = response.data;
-        })
-        .catch(() => {
-          this.returnedEvents = true;
-        })
+          .post("/event/get/branch", { branchName: this.getBranch })
+          .then(response => {
+            this.returnedEvents = true;
+            response.data.forEach(event =>{
+              this.events.push({title: event.eventName, start: event.startDate, end: event.endDate, extendedProps:{description: event.eventDescription, visible: event.visible}})
+            });
+          })
+          .catch(() => {
+            this.returnedEvents = true;
+          });
       }
-    }
-    
-  },
-  
+    },
+  }
 };
 </script>
 

@@ -16,14 +16,15 @@
             :key="tab.tabName"
             :href="'/tab/' + tab.tabName"
           >{{ tab.tabName}}</b-nav-item>
-
-          <b-nav-item-dropdown text="Speltakken" v-if="branches.length">
+          <div @mouseover="onOver" @mouseleave="onLeave" >
+          <b-nav-item-dropdown  ref="dropdown"  text="Speltakken" v-if="branches.length">
             <b-dropdown-item
               v-for="branch in $props.branches"
               :key="branch.branchName"
               :href="'/branch/' + branch.branchName"
             >{{ branch.branchName }}</b-dropdown-item>
           </b-nav-item-dropdown>
+          </div>
         </b-navbar-nav>
       </b-collapse>
     </b-container>
@@ -34,10 +35,6 @@
 .navbar-nav .dropdown-menu {
   position: absolute !important;
   float: none;
-}
-nav.navbar{
-  background:transparent url("data:image/svg+xml;utf8,<svg width='100%' height='100%' preserveAspectRatio='none' version='1.1' xmlns='http://www.w3.org/2000/svg' class='wave'><defs></defs><path id='feel-the-wave-two' d=''/></svg>") no-repeat;
-  /* background-size: 100vw 100%; */
 }
 .navbar-toggler{
 width: 60px;
@@ -52,12 +49,23 @@ border: none !important;
 .navbar img{
   border: 0 !important;
 }
+.dropdown-menu {
+top:90% !important;
+}
 
 </style>
 
 <script>
 export default {
   name: "vueNav",
-  props: ["tabs", "branches"]
+  props: ["tabs", "branches"],
+  methods: {
+      onOver() {
+        this.$refs.dropdown.visible = true;
+      },
+      onLeave() {
+        this.$refs.dropdown.visible = false;
+      }
+    }
 };
 </script>
