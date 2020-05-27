@@ -4,12 +4,7 @@
       <b-container>
         <h1>{{ tab }}</h1>
         <b-card class="clean-card">
-          <article v-if="tabDescription !== null" class="ql-editor" v-html="compiledHtml"></article>
-          <div v-else class="d-flex justify-content-center">
-            <span  class="my-auto">
-              <b-spinner variant="primary" label="Spinning"></b-spinner>
-            </span>
-          </div>
+          <quillViewer v-bind:ready="tabDescription !== null" v-bind:quill="tabDescription"></quillViewer>
         </b-card>
       </b-container>
     </section>
@@ -20,21 +15,6 @@
 
 
 <style lang="css">
-@import "~vue2-editor/dist/vue2-editor.css";
-
-/* Import the Quill styles you want */
-@import "~quill/dist/quill.core.css";
-@import "~quill/dist/quill.bubble.css";
-@import "~quill/dist/quill.snow.css";
-
-img {
-  padding: 0.25rem;
-  background-color: #fff;
-  border: 1px solid #dee2e6;
-  border-radius: 0.25rem;
-  max-width: 100%;
-}
-
 .clean-card p {
   opacity: 1;
 }
@@ -44,11 +24,12 @@ img {
 <script>
 import axios from "@/plugins/axios.js";
 import router from "@/router/index.js";
-import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
+import quillViewer from "@/components/content/quillViewer";
 
 export default {
   name: "tab",
   props: ["tab"],
+  components:{quillViewer},
   data() {
     return {
       tabDescription: null
@@ -63,11 +44,7 @@ export default {
           if (response.data.tabDescription == null) {
             router.push("/error/404");
           }
-          var converter = new QuillDeltaToHtmlConverter(
-            JSON.parse(response.data.tabDescription),
-            {multiLineParagraph: false, multiLineBlockquote: false, multiLineHeader: false, multiLineCodeblock: false}
-          );
-          this.tabDescription = converter.convert();
+          this.tabDescription = response.data.tabDescription;
         } else {
           router.push("/error/404");
         }
@@ -84,10 +61,5 @@ export default {
         }
       });
   },
-  computed: {
-    compiledHtml: function() {
-      return this.tabDescription;
-    }
-  }
 };
 </script>
