@@ -5,7 +5,6 @@ node_modules
 /public/api/images/src
 /public/api/images/autoload.php
 
-/public/api/images/src
 /public/api/Mail/sendgrid-php
 
 # local env files
