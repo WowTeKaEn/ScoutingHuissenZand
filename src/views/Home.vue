@@ -16,16 +16,14 @@
         </b-row>
       </b-container>
     </section>
-    <section class="clean-block clean-info dark">
+    <section class="clean-block clean-info p-0 py-3">
       <b-container>
         <div class="block-heading p-0">
           <h2 class="text-info">Evenementen</h2>
           <p>Deze kalender bevat alle aankomende evenementen van de scouting</p>
         </div>
-        <b-card class="clean-card">
           <h2>Kalender</h2>
           <calendarViewer v-bind:ready="calendarReturned" v-bind:events="events"></calendarViewer>
-        </b-card>
       </b-container>
     </section>
   </main>
@@ -35,7 +33,7 @@
 import axios from "@/plugins/axios.js";
 import teammember from "@/components/teammember.vue";
 import carousel from "@/components/layout/carousel.vue";
-import calendarViewer from "@/components/content/calendarViewer";
+import calendarViewer from "@/components/content/events/calendarViewer";
 
 export default {
   name: "Home",
@@ -66,7 +64,7 @@ export default {
       .then(response => {
         response.data.forEach(event => {
           this.events.push({
-            title: event.branchName + " - " +event.eventName,
+            title: event.branchName + " - " + event.eventName,
             start: event.startDate,
             end: event.endDate,
             description: event.eventDescription,

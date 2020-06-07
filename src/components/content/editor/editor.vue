@@ -20,6 +20,11 @@
 @import "~quill/dist/quill.core.css";
 @import "~quill/dist/quill.bubble.css";
 @import "~quill/dist/quill.snow.css";
+.ql-editor img{
+  max-width: 100%;
+  height: auto;
+}
+
 </style>
 
 <script>

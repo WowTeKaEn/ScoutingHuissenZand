@@ -1,5 +1,4 @@
 <?php
-require_once "functions.php";
 
 class db {
     private static $instance = null;
@@ -60,11 +59,6 @@ class db {
             die(print_r($e->getMessage()));
         }
     }
-
-    function quote($string) {
-        return str_replace("'", "", $this->pdo->quote($string));
-    }
-
 }
 
 ?>

@@ -6,7 +6,6 @@ function images_insert(){
 try {
     session_start();
     if (isset($_SESSION["user"]) && $_SESSION["user"]["activated"] && ($_SESSION["user"]["admin"] || sizeof($_SESSION["user"]["branches"]) > 0)) {
-        require 'autoload.php';
         require 'databaseAccess.php';
 
 

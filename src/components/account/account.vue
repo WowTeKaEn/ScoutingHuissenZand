@@ -13,7 +13,6 @@
               </b-button>
             </li>
           </ul>
-          <p>Emails naar speltaknaam@scoutinghuissenzand.nl worden automatisch doorgestuurd naar uw eigen email.</p>
         </div>
         <div v-else>
           <p>U beheert geen speltakken</p>
