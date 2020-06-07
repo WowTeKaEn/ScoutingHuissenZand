@@ -2,10 +2,7 @@
 node_modules
 /dist
 
-/public/api/images/src
-/public/api/images/autoload.php
-
-/public/api/Mail/sendgrid-php
+/public/api/vendor
 
 # local env files
 .env.local
