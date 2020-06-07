@@ -1,13 +1,20 @@
 <template>
   <b-navbar toggleable="lg" class="navbar navbar-light fixed-top bg-white clean-navbar">
     <b-container>
-      <b-navbar-brand href="/index" class="logo d-flex flex-row"><img class="mr-3" src="@/assets/img/navicon.png"><div class="m-auto" id='brand-name'>Scouting<br> Huissen Zand</div></b-navbar-brand>
-      
-      <b-navbar-toggle target="nav-collapse"> 
+      <b-navbar-brand href="/index" class="logo d-flex flex-row">
+        <img class="mr-3" src="@/assets/img/navicon.png" />
+        <div class="m-auto" id="brand-name">
+          Scouting
+          <br />Huissen Zand
+        </div>
+      </b-navbar-brand>
+
+      <b-navbar-toggle target="nav-collapse">
         <template v-slot:default="{ expanded }">
-        <b-icon v-if="expanded" icon="chevron-bar-up"></b-icon>
-        <b-icon v-else icon="chevron-bar-down"></b-icon>
-      </template></b-navbar-toggle>
+          <b-icon v-if="expanded" icon="chevron-bar-up"></b-icon>
+          <b-icon v-else icon="chevron-bar-down"></b-icon>
+        </template>
+      </b-navbar-toggle>
       <b-collapse id="nav-collapse" is-nav>
         <b-navbar-nav class="ml-auto">
           <b-nav-item href="/index">Home</b-nav-item>
@@ -16,14 +23,14 @@
             :key="tab.tabName"
             :href="'/tab/' + tab.tabName"
           >{{ tab.tabName}}</b-nav-item>
-          <div @mouseover="onOver" @mouseleave="onLeave" >
-          <b-nav-item-dropdown  ref="dropdown"  text="Speltakken" v-if="branches.length">
-            <b-dropdown-item
-              v-for="branch in $props.branches"
-              :key="branch.branchName"
-              :href="'/branch/' + branch.branchName"
-            >{{ branch.branchName }}</b-dropdown-item>
-          </b-nav-item-dropdown>
+          <div @mouseover="onOver" @mouseleave="onLeave">
+            <b-nav-item-dropdown ref="dropdown" text="Speltakken" v-if="branches.length">
+              <b-dropdown-item
+                v-for="branch in $props.branches"
+                :key="branch.branchName"
+                :href="'/speltak/' + branch.branchName"
+              >{{ branch.branchName }}</b-dropdown-item>
+            </b-nav-item-dropdown>
           </div>
         </b-navbar-nav>
       </b-collapse>
@@ -36,36 +43,41 @@
   position: absolute !important;
   float: none;
 }
-.navbar-toggler{
-width: 60px;
-height: 60px;
-border: none !important;
+.navbar-toggler {
+  width: 60px;
+  height: 60px;
+  border: none !important;
 }
 @media only screen and (max-width: 600px) {
-  #brand-name{
+  #brand-name {
     display: none;
   }
 }
-.navbar img{
+.navbar img {
   border: 0 !important;
 }
 .dropdown-menu {
-top:90% !important;
+  top: 90% !important;
 }
-
 </style>
 
 <script>
+import isMobile from "@/plugins/isMobile"
+
 export default {
   name: "vueNav",
   props: ["tabs", "branches"],
   methods: {
-      onOver() {
+    onOver() {
+      if (!isMobile()) {
         this.$refs.dropdown.visible = true;
-      },
-      onLeave() {
+      }
+    },
+    onLeave() {
+      if (!isMobile()) {
         this.$refs.dropdown.visible = false;
       }
     }
+  }
 };
 </script>

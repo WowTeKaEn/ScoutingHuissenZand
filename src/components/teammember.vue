@@ -1,11 +1,12 @@
 <template>
   <div class="team-member mx-auto d-flex flex-column">
     <a class="mx-auto"
-      :href="'/branch/'+branch.branchName"
+      :href="'/speltak/'+branch.branchName"
     >
     <img
         class="rounded-circle mx-auto"
         :src="picture"
+        onerror="this.onerror=null;this.src='https://scoutingrvp.nl/wp-content/uploads/2019/07/Naamloos.png'"
       />
     </a>
     <h4 class="mx-auto mt-3" style="color: #28a745;">{{ branch.branchName }}</h4>
@@ -32,7 +33,7 @@ export default {
   props: ["branch"],
   data(){
     return {
-          instaPicture: 'https://lh3.googleusercontent.com/proxy/PR53zEcpl4l_j6a2MHYSwBbvnRfr7q8nsJD2gTuPRYV5KUXxZQj86KAlZ4l92yZT1FqF5k8hB0pD3AUlWYpuHTdOwi5_MfFciCDuODBMe19H3qp2R8gnsF0XqvWqjQHPdf5zcKIaskULkg',
+          instaPicture: '',
     }
   },
   methods: {
@@ -46,7 +47,7 @@ export default {
           this.instaPicture =
           response.data["users"][0]["user"]["profile_pic_url"];
         }).catch(() => {
-            this.instaPicture = "https://lh3.googleusercontent.com/proxy/PR53zEcpl4l_j6a2MHYSwBbvnRfr7q8nsJD2gTuPRYV5KUXxZQj86KAlZ4l92yZT1FqF5k8hB0pD3AUlWYpuHTdOwi5_MfFciCDuODBMe19H3qp2R8gnsF0XqvWqjQHPdf5zcKIaskULkg"
+            this.instaPicture = "https://scoutingrvp.nl/wp-content/uploads/2019/07/Naamloos.png"
         })
     }
   },

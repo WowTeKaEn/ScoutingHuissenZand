@@ -1,5 +1,4 @@
 <?php
-require_once 'autoload.php';
 require_once 'databaseAccess.php';
 
 function saveImages($images) {

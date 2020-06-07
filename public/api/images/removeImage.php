@@ -1,6 +1,6 @@
 <?php
 
-function imaged_remove(){
+function images_remove(){
     
 
 session_start();

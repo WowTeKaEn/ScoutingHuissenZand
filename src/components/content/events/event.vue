@@ -1,0 +1,112 @@
+<template>
+  <div class="d-flex flex-column form-group">
+    <b-form-input v-if="newCheckEventName == null" v-model="eventName" placeholder="Evenement naam"></b-form-input>
+    <editor
+      class="mt-3"
+      ref="editor"
+      v-bind:description="getHtml"
+    ></editor>
+    <b-form-checkbox
+        v-model="visible"
+        value="1"
+        unchecked-value="0"
+      >Zichtbaar</b-form-checkbox>
+    
+  </div>
+</template>
+
+<script>
+import editor from "../editor/editor";
+import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
+import axios from "@/plugins/axios.js";
+
+export default {
+  name: "event",
+  props: ["event","events","branch"],
+  components: { editor },
+  data() {
+    return {
+      eventName: this.event.title,
+      newCheckEventName: this.event.title,
+      visible: this.event.extendedProps.visible,
+      dateFormat: "D MMM",
+      submitting: false,
+      editingEvent: this.event
+    };
+  },
+  methods: {
+    attemptToSubmit() {
+      if (this.eventName != null && this.$refs.editor.editDescription != null) {
+        this.submitting = true;
+        axios
+          .post("/event/insert", {
+            eventName: this.eventName,
+            eventDescription: this.$refs.editor.getDelta(),
+            startDate: this.editingEvent.start,
+            endDate: this.editingEvent.end,
+            visible: this.visible,
+            branchName: this.branch,
+            images: this.$refs.editor.images,
+            deletedImages: this.$refs.editor.deletedImages,
+          })
+          .then(response => {
+            this.submitting = false;
+            if (response.status == 201) {
+              this.events.push({title: this.eventName, start: this.editingEvent.start, end: this.editingEvent.end, extendedProps:{description: this.$refs.editor.getDelta(), visible: this.visible}})
+              this.$emit('correct-submit',response.status);
+            }else if(response.status == 200){
+              this.event.setExtendedProp("description",this.$refs.editor.getDelta());
+              this.event.setExtendedProp("visible",this.visible);
+              this.$emit('correct-submit',response.status);
+            } else {
+              this.$bvToast.toast("Unknown", {
+                title: "Error",
+                autoHideDelay: 1000,
+                appendToast: true
+              });
+            }
+          })
+          .catch(error => {
+            this.submitting = false;
+            if (error.response.status === 401) {
+              this.$bvToast.toast("Unauthorised", {
+                title: "Error",
+                autoHideDelay: 1000,
+                appendToast: true
+              });
+            } else if (error.response.status == 400) {
+              this.$bvToast.toast("Evenement niet toegevoegd", {
+                title: "Error",
+                autoHideDelay: 1000,
+                appendToast: true,
+              });
+            } else {
+              this.$bvToast.toast(error + "", {
+                title: "Error",
+                autoHideDelay: 1000,
+                appendToast: true
+              });
+            }
+          });
+      } else {
+        this.$bvToast.toast("Vul alle velden in.", {
+          title: "Error",
+          autoHideDelay: 1000,
+          appendToast: true
+        });
+      }
+    }
+  },
+  computed:{
+    getHtml(){
+      if(this.editingEvent != null && this.editingEvent.extendedProps.description != null){
+        var converter = new QuillDeltaToHtmlConverter(
+            JSON.parse(this.editingEvent.extendedProps.description),
+      {multiLineParagraph: false, multiLineBlockquote: false, multiLineHeader: false, multiLineCodeblock: false});
+      return converter.convert();
+      }
+      return "";
+    }
+  }
+};
+</script>

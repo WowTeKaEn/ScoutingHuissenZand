@@ -48,6 +48,21 @@ img {
   height: 100%;
 }
 
+.clean-block.clean-hero .text{
+  top: -20% ;
+  position: relative;
+}
+
+@media only screen and (max-width: 575px) {
+  .clean-block.clean-hero .text{
+  top: -5%;
+}
+
+.carousel.slide.pointer-event{
+  height: 100vw !important;
+}
+}
+
 .clean-hero {
   display: none !important;
 }
@@ -63,7 +78,7 @@ export default {
   data() {
     return {
       slide: 0,
-      sliding: null
+      sliding: false
     };
   },
   methods: {

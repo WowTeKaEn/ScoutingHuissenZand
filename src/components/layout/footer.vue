@@ -5,7 +5,7 @@
                 <div class="col-sm-3">
                     <h5>Speltakken</h5>
                     <ul>
-                        <li v-for="branch in branches" :key="branch.branchName"><a :href="'/branch/' + branch.branchName">{{ branch.branchName }}</a></li>
+                        <li v-for="branch in branches" :key="branch.branchName"><a :href="'/speltak/' + branch.branchName">{{ branch.branchName }}</a></li>
                     </ul>
                 </div>
                 <div class="col-sm-3">

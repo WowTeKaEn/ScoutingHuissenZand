@@ -51,7 +51,8 @@ const routes = [
     props: true
   },
   { path: '/tab/:tab', component: () => import('../views/tab.vue'), props: true },
-  { path: '/branch/:branchName', component: () => import('../views/branch.vue'), props: true },
+  { path: '/speltak/:branchName', component: () => import('../views/branch.vue'), props: true },
+  { path: '/speltak/:branchName/inschrijven', component: () => import('../views/enroll.vue'), props: true },
   { path: '/error/:error', component: NotFound, props: true },
   { path: '*', component: NotFound }
 ]

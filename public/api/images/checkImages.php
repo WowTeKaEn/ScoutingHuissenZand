@@ -2,13 +2,11 @@
 function images_check(){
     $cronUser    = "8T['!=3Z=Lw4vFUg";
 $cronPass    = "rE=dz!P]zRM?8M63";
-$cronAddress = "116.203.134.67";
 
-if ($_SERVER["REMOTE_ADDR"] == $cronAddress && $_SERVER['PHP_AUTH_USER'] == $cronUser && $_SERVER['PHP_AUTH_PW'] == $cronPass) {
+if ($_SERVER['PHP_AUTH_USER'] == $cronUser && $_SERVER['PHP_AUTH_PW'] == $cronPass) {
 
-    require_once "../databaseAccess.php";
-    require_once "autoload.php";
-
+    require_once "databaseAccess.php";
+    
     $pdoResult = db::getInstance()->executeQuery("SELECT * FROM `image` WHERE saved = 0 and HOUR(TIMEDIFF(NOW(), timestamp))>6");
 
     if ($pdoResult) {

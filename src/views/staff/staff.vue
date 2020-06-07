@@ -10,6 +10,9 @@
           <b-tab title="Evenementen">
             <events v-bind:user="user" v-bind:branches="user.branches"></events>
           </b-tab>
+          <b-tab title="Foto's">
+            <imageEditor v-bind:user="user" v-bind:branches="user.branches"></imageEditor>
+          </b-tab>
           <b-tab title="Tabbladen" v-if="user.admin == 1">
             <tabInsert ref="tabInsert" v-bind:tabs="tabs"></tabInsert>
             <tabDelete @editTab="editTab" v-bind:tabs="tabs"></tabDelete>
@@ -41,13 +44,14 @@
 
 
 <script>
-import tabInsert from "@/components/content/tabInsert.vue";
-import tabDelete from "@/components/content/tabDelete.vue";
-import assignBranch from "@/components/content/assignBranch";
-import editBranch from "@/components/content/editBranch";
+import tabInsert from "@/components/content/tabs/tabInsert.vue";
+import tabDelete from "@/components/content/tabs/tabDelete.vue";
+import assignBranch from "@/components/content/branches/assignBranch";
+import editBranch from "@/components/content/branches/editBranch";
 import account from "@/components/account/account.vue";
 import axios from "@/plugins/axios.js";
-import events from "@/components/content/events.vue";
+import events from "@/components/content/events/events.vue";
+import imageEditor from "@/components/content/branches/imageEditor.vue";
 import setCookie from "@/plugins/setCookie.js";
 
 export default {
@@ -58,7 +62,8 @@ export default {
     tabInsert,
     tabDelete,
     account,
-    events
+    events,
+    imageEditor
   },
   props: ["branches", "tabs", "who"],
   data() {

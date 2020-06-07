@@ -32,7 +32,7 @@ export default {
   },
   created() {
     axios
-      .post("/user/validate",{who: this.who, token: this.token})
+      .post("/user/validate",{email: this.who, token: this.token})
       .then(response => {
         this.returned = true;
         if (response.status === 200) {

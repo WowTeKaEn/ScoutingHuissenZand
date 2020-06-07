@@ -24,7 +24,7 @@
 <script>
 import axios from "@/plugins/axios.js";
 import router from "@/router/index.js";
-import quillViewer from "@/components/content/quillViewer";
+import quillViewer from "@/components/content/editor/quillViewer";
 
 export default {
   name: "tab",
