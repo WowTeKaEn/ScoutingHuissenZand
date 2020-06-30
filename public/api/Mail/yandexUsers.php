@@ -1,14 +1,5 @@
 <?php
 
-//ID
-//1000.2HTJOB0DHK2Y0YUNU6PZC06XNR5UTR
-// Secret
-//d3a0cb2b48d4e9f8658f7fe52d2f5623ca4f85434b
-
-// OAuth AgAAAAA_SLScAAZi4vIaYHUT-Eg5qjL2zy0BuZA
-
-// X-Org-ID 4161911
-
 function create_account($branchName, $branchAdmin) {
     $password = randomPassword();
     $data     = array(
@@ -26,7 +17,6 @@ function create_account($branchName, $branchAdmin) {
     );
     $ch = user_curl_init();
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    // curl_setopt($ch, CURLOPT_NOBODY, true);
     $output   = curl_exec($ch);
     $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
@@ -38,7 +28,7 @@ function create_account($branchName, $branchAdmin) {
 
 function update_user($branchName, $dismiss = false, $branchAdmin = "") {
     $branchName = strtolower($branchName);
-    $data       = array("is_dismissed" => $dismiss);
+    $data       = array("is_dismissed" => $dismiss,"language"=> "en");
     $ch         = user_curl_init();
     $password   = "";
     $userId     = get_user_id($branchName);
@@ -71,8 +61,9 @@ function send_account_details($branchName, $branchAdmin, $password) {
         <p>Gebruikersnaam: " . $branchName . "@scoutinghuissenzand.nl<br>
         Wachtwoord: " . $password . "<br>
         Mail portaal: <a href='https://mail.yandex.com/'>https://mail.yandex.com/</a><br>
-        Verander na inloggen meteen je wachtwoord.
-        Gebruik dit email adres niet voor persoonlijke doeleinden. De admin kan mocht het nodig zijn ook bij dit email adres.
+        Verander na inloggen meteen je wachtwoord.<br><br>
+        Gebruik dit email adres niet voor persoonlijke doeleinden.<br>
+        De admin kan mocht het nodig zijn ook bij dit email adres.
         </p>", [], $branchAdmin, ucfirst($branchName) . " Admin") != 202) {
         return false;
     }
@@ -121,6 +112,6 @@ function user_curl_init() {
 
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_HEADER, false);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array('X-Org-ID: 4161911', 'Authorization: OAuth AgAAAAA_SLScAAZi4vIaYHUT-Eg5qjL2zy0BuZA', 'Content-Type: application/json'));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, array($_ENV["YANDEX_ORG_ID"], 'Authorization: '.$_ENV["YANDEX_OAUTH"], 'Content-Type: application/json'));
     return $ch;
 }

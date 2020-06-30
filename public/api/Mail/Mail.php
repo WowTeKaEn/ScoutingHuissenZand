@@ -9,7 +9,7 @@ class SendGridMail {
     private static $sendGrid = null;
 
     private function __construct() {
-        self::$sendGrid = new \SendGrid("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");
+        self::$sendGrid = new \SendGrid($_ENV["SENDGRID_API_KEY"]);
     }
 
     public static function getInstance() {
@@ -20,14 +20,30 @@ class SendGridMail {
         return self::$instance;
     }
 
-    public function sendMail($subject, $content, $template = [], $toMail = "woutkn@gmail.com", $toName = "Scouting Huissen Zand Admin",  $fromMail = "admin@scoutinghuissenzand.nl", $fromName = "Scouting Huissen Zand Admin") {
+    public function sendMail($subject, $content, $template = [], $toMail = null, $toName = null,  $fromMail = null, $fromName = null) {
+        if($toMail == null){
+            $toMail = $_ENV["ADMIN_MAIL_TO"];
+        }
+        if($toName == null){
+            $toName = $_ENV["ADMIN_NAME_TO"];
+        }
+        if($fromMail == null){
+            $fromMail = $_ENV["ADMIN_MAIL_FROM"];
+        }
+        if($fromName == null){
+            $fromName = $_ENV["ADMIN_NAME_FROM"];
+        }
+
         try {
             if(isset($template["id"])){
                 $email = new \SendGrid\Mail\Mail(new From($fromMail, $fromName),[new To($toMail,$toName,$template)]);
                 $email->setTemplateId($template["id"]);
             }else{
-                $email = new \SendGrid\Mail\Mail(new From($fromMail, $fromName),[new To($toMail,$toName,["subject" => $subject, "content" => $content])]);
-                $email->setTemplateId("d-b4cba69c9784445b994212a46050df9d");
+                $email = new \SendGrid\Mail\Mail();
+                $email->setFrom($fromMail, $fromName);
+                $email->setSubject($subject);
+                $email->addTo($toMail,$toName);
+                $email->addContent("text/html","<font size='4'>".$subject."</font><br><br>".$content);
             } 
             return self::$sendGrid->send($email)->statusCode();
         } catch (Exception $e) {

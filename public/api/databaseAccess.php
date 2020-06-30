@@ -5,7 +5,7 @@ class db {
 
     private function __construct() {
         try {
-            $this->pdo = new PDO("mysql:host=localhost;dbname=id12852262_scouting", "id12852262_webuser", "tuxKVQmroauoNUUF");
+            $this->pdo = new PDO($_ENV["DATABASE_URL"], $_ENV["DATABESE_USER"], $_ENV["DATABASE_PASS"]);
         } catch (Exception $e) {
             http_response_code(500);
             die(print_r($e->getMessage()));

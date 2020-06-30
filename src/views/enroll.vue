@@ -1,5 +1,4 @@
 <template>
-  <main class="page">
     <section class="clean-block p-0 py-5 dark">
       <b-container v-if="!enrolled">
         <a :href="'/speltak/' + branch.branchName">&crarr; terug</a>
@@ -131,7 +130,6 @@
         </b-card>
       </b-container>
     </section>
-  </main>
 </template>
 
 <style lang="css">
@@ -146,7 +144,6 @@ input {
 <script>
 import router from "@/router/index.js";
 import axios from "@/plugins/axios.js";
-
 export default {
   name: "enroll",
   props: ["branchName", "branches"],
@@ -228,6 +225,6 @@ export default {
     if (this.branch == null) {
       router.push("/error/404");
     }
-  }
+  },
 };
 </script>

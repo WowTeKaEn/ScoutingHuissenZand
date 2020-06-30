@@ -1,10 +1,13 @@
 <template>
-  <main class="page landing-page">
+<div class="d-flex flex-column flex-grow">
     <section>
       <carousel></carousel>
+      
     </section>
+    
     <section class="clean-block clean-info dark">
-      <b-container class="mt-5">
+      <div class="section-decoration bottom"></div>
+      <b-container  class="mt-5">
         <div class="block-heading">
           <h2 class="text-info">Speltakken</h2>
           <p>Dit zijn de verschillende speltakken van Scouting Huissen Zand</p>
@@ -15,18 +18,21 @@
           </b-col>
         </b-row>
       </b-container>
+      <div class="section-decoration top"></div>
     </section>
-    <section class="clean-block clean-info p-0 py-3">
+
+    <section class="clean-block clean-info p-0 py-3 my-3">
+      
       <b-container>
         <div class="block-heading p-0">
           <h2 class="text-info">Evenementen</h2>
           <p>Deze kalender bevat alle aankomende evenementen van de scouting</p>
         </div>
-          <h2>Kalender</h2>
-          <calendarViewer v-bind:ready="calendarReturned" v-bind:events="events"></calendarViewer>
+        <h2>Kalender</h2>
+        <calendarViewer v-bind:ready="calendarReturned" v-bind:events="events"></calendarViewer>
       </b-container>
     </section>
-  </main>
+</div>
 </template>
 
 <script>
@@ -83,11 +89,31 @@ export default {
           });
         }
       });
-  }
+  },
 };
 </script>
 
 <style>
+
+.section-decoration {
+  background-position: center top;
+  height: 20px;
+  width: 100%;
+    position: absolute;
+  left: 0;
+  z-index: 2;
+  background-image: url(~@/assets/img/section-border.svg);
+  fill: #f6f6f6;
+}
+.section-decoration.top{
+  bottom: -20px;
+  transform: scale(-1,-1);
+  
+}
+.section-decoration.bottom{
+  top: -20px;
+}
+
 .clean-hero {
   color: #28a745;
 }

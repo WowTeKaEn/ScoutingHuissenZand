@@ -1,5 +1,4 @@
 <template>
-  <main class="page">
     <section class="clean-block p-0 py-5 dark">
       <b-container>
         <b-card v-if="returned">
@@ -8,7 +7,6 @@
         </b-card>
       </b-container>
     </section>
-  </main>
 </template>
 
 
@@ -55,6 +53,6 @@ export default {
           appendToast: true
         });
       });
-  }
+  },
 };
 </script>

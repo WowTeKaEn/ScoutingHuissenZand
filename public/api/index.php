@@ -47,8 +47,10 @@ if(!isset($_GET['path'])){
     http_response_code(404);
 }else{
     try{
+        $found = false;
         foreach($endPoints as $key => $endPoint){
             if($key == $_GET["path"]){
+                require_once "env.php";
                 require_once $endPoint;
                 $funcName = str_replace("/","_",$key);
 
@@ -58,7 +60,8 @@ if(!isset($_GET['path'])){
                 if(function_exists($funcName)){
                     require_once "vendor/autoload.php";
                     $funcName();
-                    exit;
+                    $found = true;
+                break;
                 }else{
                     http_response_code(404);
                 }
@@ -66,8 +69,10 @@ if(!isset($_GET['path'])){
                 exit;
             }
         }
-        http_response_code(404);
-        echo "endpoint unknown <br>";
+        if(!$found){
+            http_response_code(404);
+            echo "endpoint unknown <br>";
+        }
     }catch(Exception $e){
         http_response_code(404);
     }

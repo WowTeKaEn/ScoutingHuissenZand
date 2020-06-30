@@ -1,5 +1,4 @@
 <template>
-  <main class="page">
     <section class="clean-block p-0 py-5 dark">
       <b-container>
         <div class="d-flex justify-content-between">
@@ -65,13 +64,9 @@
         </b-card>
       </b-container>
     </section>
-  </main>
 </template>
 
 <style lang="css">
-.page {
-  background-color: #28a745;
-}
 
 .fb-comments iframe {
   width: 100% !important;
@@ -220,7 +215,7 @@ export default {
           });
         }
       });
-  }
+  },
 };
 </script>
 
