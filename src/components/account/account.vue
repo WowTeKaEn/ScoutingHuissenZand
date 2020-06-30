@@ -49,7 +49,7 @@ export default {
         .then(response => {
           if (response.status === 201) {
             setCookie("loggedIn", "false");
-            window.location.href = "/staff";
+            window.location.href = "/staf";
           } else {
             this.$bvToast.toast("Unknown", {
               title: "Error",

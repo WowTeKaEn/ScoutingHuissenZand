@@ -19,9 +19,9 @@ function saveImages($images) {
 function removeImages($images) {
     if(!empty($images)){
     \Cloudinary::config(array(
-        "cloud_name" => "duj1jfopx",
-        "api_key"    => "648995845517767",
-        "api_secret" => "yj9xOCyaYp1WSFB6VsA88TrYId4",
+        "cloud_name" => $_ENV["CLOUDINARY_CLOUD_NAME"],
+        "api_key"    => $_ENV["CLOUDINARY_API_KEY"],
+        "api_secret" => $_ENV["CLOUDINARY_API_SECRET"],
         "secure"     => true,
     ));
     

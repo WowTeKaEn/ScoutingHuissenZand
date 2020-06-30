@@ -1,11 +1,9 @@
 <template>
-    <main class="page">
         <section class="clean-block clean-pricing dark">
             <b-container>
                 <h1 class="text-center mt-5">{{ getError }}</h1>
             </b-container>
         </section>
-    </main>
 </template>
 
 <script>
@@ -20,6 +18,6 @@ export default {
               return "404 - Niet Gevonden"
           }
       }
-  }
+  },
 }
 </script>

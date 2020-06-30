@@ -100,7 +100,7 @@ export default {
             this.submitting = false;
             if (response.status == 201) {
               if (this.what == null && this.who == null) {
-                window.location.href = "/staffpanel"
+                window.location.href = "/stafpaneel"
               } else {
                 window.location.href = "/" + this.what + "/" + this.who;
               }

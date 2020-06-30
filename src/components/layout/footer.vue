@@ -1,5 +1,6 @@
 <template>
     <footer class="page-footer dark">
+        <div class="footer-decoration"></div>
         <b-container>
             <div class="row d-flex justify-content-center">
                 <div class="col-sm-3">
@@ -18,7 +19,7 @@
                 <div class="col-sm-3">
                     <h5>Support</h5>
                     <ul>
-                        <li><a href="/staff">Staff login</a></li>
+                        <li><a href="/staf">Staff login</a></li>
                     </ul>
                 </div>
             </div>
@@ -35,3 +36,24 @@ export default {
   props: ["tabs", "branches"],
 }
 </script>
+
+<style>
+footer{
+    position: relative;
+}
+
+.footer-decoration {
+  background-position: center top;
+  height: 20px;
+  width: 100%;
+    position: absolute;
+  left: 0;
+  z-index: 2;
+  background-image: url(~@/assets/img/footer-border.svg);
+  fill: #f6f6f6;
+  top: -20px;
+}
+
+
+
+</style>

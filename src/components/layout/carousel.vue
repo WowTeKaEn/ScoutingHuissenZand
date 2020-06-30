@@ -23,7 +23,7 @@
         <img
           style="object-fit: cover;"
           class="d-block w-100"
-          src="https://scontent-amt2-1.xx.fbcdn.net/v/t1.0-9/78408294_2536457219779413_5672881358192508928_o.jpg?_nc_cat=108&_nc_sid=110474&_nc_ohc=P7Gy9lnAerUAX_GXKaL&_nc_ht=scontent-amt2-1.xx&oh=ab194c14eef63046f22a3b74184ebc20&oe=5EF12326&dl=1"
+          src="https://res.cloudinary.com/duj1jfopx/image/upload/v1593523963/78408294_2536457219779413_5672881358192508928_o_ghls3z.jpg"
           alt="image slot"
         />
       </template>
@@ -33,7 +33,7 @@
         <img
           style="object-fit: cover;"
           class="d-block w-100"
-          src="https://scontent-amt2-1.xx.fbcdn.net/v/t1.0-9/88248349_2759330350825431_3042933313594458112_o.jpg?_nc_cat=105&_nc_sid=110474&_nc_ohc=DFcmPnrFsKEAX-cZycP&_nc_ht=scontent-amt2-1.xx&oh=6b53306b56e9cc91e586a1ae60930221&oe=5EF1D317&dl=1"
+          src="https://res.cloudinary.com/duj1jfopx/image/upload/v1593523635/88248349_2759330350825431_3042933313594458112_o_fva19f.jpg"
           alt="image slot"
         />
       </template>

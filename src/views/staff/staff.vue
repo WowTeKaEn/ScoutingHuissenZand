@@ -1,5 +1,4 @@
 <template>
-  <main class="page">
     <section v-if="returned && who == null" class="clean-block p-0 py-5 dark">
       <b-container>
         <b-tabs content-class="mt-3">
@@ -38,7 +37,6 @@
         </span>
       </b-container>
     </section>
-  </main>
 </template>
 
 
@@ -108,7 +106,7 @@ export default {
           appendToast: true
         });
         setCookie("loggedIn", "false");
-        window.location.href = "/staff";
+        window.location.href = "/staf";
       });
   }
 };
