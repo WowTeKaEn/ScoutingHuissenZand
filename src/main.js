@@ -11,11 +11,7 @@ import VueGallery from 'vue-gallery'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 
 
-
-require('@/assets/css/smoothproducts.css');
 require('@/assets/css/all.min.css');
-require('@/assets/bootstrap/css/bootstrap.min.css');
-require('bootstrap-vue/dist/bootstrap-vue.css');
 
 
 

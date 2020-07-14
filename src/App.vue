@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <VueNav v-if="returned" v-bind:branches="branches" v-bind:tabs="tabs"></VueNav>
-    <main class="page">
+    <main :class="containsPage">
     <router-view v-if="returned" v-bind:branches="branches" v-bind:tabs="tabs" />
     </main>
     <VueFooter v-if="returned" v-bind:branches="branches" v-bind:tabs="tabs"></VueFooter>
@@ -63,7 +63,12 @@ export default {
   },
   mounted(){
     if(isMobile()){
-      document.getElementsByClassName("page")[0].classList.add("small");
+      document.getElementsByClassName("page")[0].classList.add("small-nav");
+    }
+  },
+  computed:{
+    containsPage(){
+      return this.$route.path == "/index" || this.$route.path == "/" ? "page small-nav" : "page";
     }
   }
 };
@@ -71,11 +76,9 @@ export default {
 
 
 <style>
-.navbar {
-  padding: 0;
-}
 main.page {
   padding-top: 122px !important;
+  background-color: #f6f6f6;
 }
 
 @media (min-width: 576px) {
@@ -84,7 +87,7 @@ main.page {
   }
 }
 
-main.page.small {
+main.page.small-nav {
   padding-top: 96px !important;
 }
 
@@ -92,9 +95,31 @@ main.page.small {
   outline-color: rgba(0, 0, 0, 0) !important;
 }
 
+html, body {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
 
-section{
-  position: relative;
+main{
+  display: flex !important;
+  flex-direction: column;
+  flex: 1 1;
+}
+
+div#app{
+  display: flex !important;
+  flex-direction: column;
+  flex: 1 1;
+}
+
+main section:first-of-type{
+  flex: 1 1;
+}
+
+.flex-fill.dark{
+  background-color: #f6f6f6;
 }
 </style>
 

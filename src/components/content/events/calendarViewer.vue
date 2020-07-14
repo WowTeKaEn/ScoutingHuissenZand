@@ -41,7 +41,7 @@
 }
 
 
-.fc-event-container:hover {
+.fc-event-container:hover, .fc-list-item:hover {
   cursor: pointer;
 }
 
@@ -51,6 +51,10 @@
 
 .b-sidebar-header {
   text-align: right !important;
+}
+
+.fc-scroller{
+  height: 384px !important;
 }
 
 @import "~@fullcalendar/core/main.css";
