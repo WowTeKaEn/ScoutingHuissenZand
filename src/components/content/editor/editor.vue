@@ -1,4 +1,5 @@
 <template>
+<div>
   <b-overlay :show="disabled" rounded="sm">
     <vue-editor
       ref="editor"
@@ -11,6 +12,8 @@
       :disabled="disabled"
     ></vue-editor>
   </b-overlay>
+  <b-progress v-if="disabled"  height="2px"  :value="progress" :max="120"></b-progress>
+</div>
 </template>
 
 <style lang="css">
@@ -47,18 +50,31 @@ export default {
       disabled: false,
       editDescription: this.description,
       images: [],
-      deletedImages: []
+      deletedImages: [],
+      progress: 0,
     };
   },
   methods: {
     handleImageAdded(file, Editor, cursorLocation, resetUploader) {
+      var temp = this;
+      var config = {
+        onUploadProgress: function(progressEvent) {
+          temp.progress = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );      
+        }
+      }
+
+
+
       console.log("handling image upload");
       var formData = new FormData();
       formData.append("file", file);
       this.disabled = true;
       axios
-        .post("/images/insert", formData)
+        .post("/images/insert", formData, config)
         .then(result => {
+          this.progress = 0;
           this.disabled = false;
           let url = result.data.url; // Get url from response
           this.images.push(result.data.public_id);

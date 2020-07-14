@@ -52,19 +52,19 @@
 }
 
 .navbar.transition {
-  transition: 0.35s;
+  transition: all 0.3s;
 }
 
-.navbar.small {
+.navbar.small-nav {
   padding: 0 1rem 0 1rem !important;
   
 }
 
 .navbar .navbar-brand.transition{
-  transition: 0.35s;
+  transition: all 0.3s;
 }
 
-.navbar.small .navbar-brand{
+.navbar.small-nav .navbar-brand{
   padding: 0 !important;
 }
 @media only screen and (max-width: 600px) {
@@ -106,16 +106,16 @@ export default {
       document.getElementById("navbar").classList.add("transition");
       document.querySelector('.navbar .navbar-brand').classList.add("transition");
     }else{
-      document.getElementById("navbar").classList.add("small");
+      document.getElementById("navbar").classList.add("small-nav");
     }
     function scrollFunction() {
       if (
-        document.body.scrollTop > 200 ||
-        document.documentElement.scrollTop > 200
+        document.body.scrollTop > 10 ||
+        document.documentElement.scrollTop > 10
       ) {
-        document.getElementById("navbar").classList.add("small");
+        document.getElementById("navbar").classList.add("small-nav");
       } else {
-        document.getElementById("navbar").classList.remove("small");
+        document.getElementById("navbar").classList.remove("small-nav");
       }
     }
   }

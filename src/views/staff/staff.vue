@@ -6,10 +6,10 @@
             <account @editBranch="editBranch" v-bind:user="user" v-bind:branches="user.branches"></account>
             <editBranch v-if="currentBranch != null" v-bind:branch="currentBranch"></editBranch>
           </b-tab>
-          <b-tab title="Evenementen">
+          <b-tab title="Evenementen" v-if="user.branches.length > 0">
             <events v-bind:user="user" v-bind:branches="user.branches"></events>
           </b-tab>
-          <b-tab title="Foto's">
+          <b-tab title="Foto's" v-if="user.branches.length > 0">
             <imageEditor v-bind:user="user" v-bind:branches="user.branches"></imageEditor>
           </b-tab>
           <b-tab title="Tabbladen" v-if="user.admin == 1">

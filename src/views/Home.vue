@@ -1,11 +1,11 @@
 <template>
-<div class="d-flex flex-column flex-grow">
+<div id="homepage" class="d-flex flex-column flex-grow">
     <section>
       <carousel></carousel>
       
     </section>
     
-    <section class="clean-block clean-info dark">
+    <section class="clean-block clean-info dark" style="position:relative">
       <div class="section-decoration bottom"></div>
       <b-container  class="mt-5">
         <div class="block-heading">
@@ -21,7 +21,7 @@
       <div class="section-decoration top"></div>
     </section>
 
-    <section class="clean-block clean-info p-0 py-3 my-3">
+    <section class="clean-block clean-info p-0 py-5">
       
       <b-container>
         <div class="block-heading p-0">
@@ -94,27 +94,31 @@ export default {
 </script>
 
 <style>
-
 .section-decoration {
-  background-position: center top;
-  height: 20px;
-  width: 100%;
-    position: absolute;
-  left: 0;
-  z-index: 2;
-  background-image: url(~@/assets/img/section-border.svg);
-  fill: #f6f6f6;
-}
-.section-decoration.top{
-  bottom: -20px;
-  transform: scale(-1,-1);
-  
-}
-.section-decoration.bottom{
-  top: -20px;
-}
+    background-position: center top;
+    height: 20px;
+    width: 100%;
+      position: absolute;
+    left: 0;
+    z-index: 2;
+    background-image: url(~@/assets/img/section-border.svg);
+    fill: #f6f6f6;
+  }
+  .section-decoration.top{
+    bottom: -20px;
+    transform: scale(-1,-1);
 
-.clean-hero {
-  color: #28a745;
-}
+  }
+  .section-decoration.bottom{
+    top: -20px;
+  }
+
+  .clean-block{
+    background-color:white
+  }
+
+  .clean-hero {
+    color: #28a745;
+  }
+
 </style>
