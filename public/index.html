@@ -21,6 +21,6 @@
     </noscript>
     <div id="app" data-model='<?php $_GET["path"] = "info"; require_once "./api/index.php"; ?>'></div>
     <!-- built files will be auto injected -->
-    <script>setTimeout(()=>{var img=document.getElementsByTagName('img');for(var i=0;i<img.length;i++){if(img[i].getAttribute('alt')=='www.000webhost.com'){img[i].parentElement.removeChild(img[i])}}});</script>
+    <script>window.onload=()=>{var img=document.getElementsByTagName('img');for(var i=0;i<img.length;i++){if(img[i].getAttribute('alt')=='www.000webhost.com'){img[i].parentElement.removeChild(img[i])}}};</script>
   </body>
 </html>
