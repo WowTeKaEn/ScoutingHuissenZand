@@ -136,7 +136,7 @@ export default {
             } else if (window.location.hash == "#gallery") {
               window.history.back();
             }
-            if(!fullscreen) {
+            if(!isFullscreen) {
               this.options.freeScroll= false;
             }
           });
