@@ -11,7 +11,8 @@
         <div v-if="returned && branch.images.length > 0">
           <hr />
           <h2>Foto's</h2>
-          <flickity
+          <b-overlay :show="imagesLoading">
+            <flickity
             v-images-loaded="loaded"
             class="carousel"
             ref="flickity"
@@ -28,6 +29,7 @@
               <img class="image" :src="image" alt />
             </div>
           </flickity>
+          </b-overlay>
         </div>
         <hr class="mt-5" />
         <h2>Kalender</h2>
@@ -96,14 +98,15 @@ export default {
         fullscreen: true,
         imagesLoaded: true,
         pauseAutoPlayOnHover: false,
-      }
+        dragThreshold: 10,
+        freeScroll: false
+      },
+      imagesLoading: true,
     };
-  },
-  destroyed() {
-    window.removeEventListener("hashchange");
   },
   methods: {
     loaded() {
+      this.imagesLoading = false;
       this.$refs.flickity.reloadCells();
       this.$refs.flickity.select(1);
     },
@@ -128,9 +131,13 @@ export default {
         if (isMobile()) {
           this.$refs.flickity.on("fullscreenChange", function(isFullscreen) {
             if (isFullscreen) {
+              this.options.freeScroll= true;
               history.pushState(null, null, "#gallery");
             } else if (window.location.hash == "#gallery") {
               window.history.back();
+            }
+            if(!fullscreen) {
+              this.options.freeScroll= false;
             }
           });
           window.addEventListener("hashchange", () => {
