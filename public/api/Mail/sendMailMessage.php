@@ -14,10 +14,24 @@ function sendMailtoAdmin(){
 }
 
 function sendMessageToAdmin($data){
-    return sendGridMail::getInstance()->sendMail(false,false,["id" => "d-4bf06958b0b44e1fbe9366e0d748936d",'email' => $data['email']]);
+    $content = 
+    $data['email']." heeft een account aangemaakt op de website.<br/>
+    Klik <a href='".$_SERVER["HTTP_HOST"]."/login/assignBranch/".$data['email']."'>hier<a/> om het account van deze email te koppelen aan een speltak.<br/>
+    Als u deze email niet kent dan hoeft u niets te doen.";
+
+
+
+    return Mailer::getInstance()->sendMail("Aanmelding bij Scouting Huissen Zand",$content);
 }
 
 function sendMessageToRecipient($data, $token){
-    return sendGridMail::getInstance()->sendMail(false,false,["id" => "d-a9071f00e82340b6b642c75f29b86504",'email' => $data['email'] ,'token'=> $token], $data['email'], $data['email']);
+    $content = "
+    U heeft een account aangemaakt op de scouting website.<br/>
+    Klik <a href='".$_SERVER["HTTP_HOST"]."/validate/".$data['email']."/".$token."'>hier<a/> om uw account te valideren<br/>
+    <br/>
+    Zodra uw account geverifieerd is wordt er een mail gestuurd naar de administrator.";
+
+
+    return Mailer::getInstance()->sendMail("Aanmelding bij Scouting Huissen Zand",$content, $data['email'], $data['email']);
 }
 

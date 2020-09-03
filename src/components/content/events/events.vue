@@ -1,20 +1,8 @@
 <template>
-  <b-card v-if="branches.length != 0" class="mb-3">
+  <b-card class="mb-3">
     <h1>Evenementen</h1>
     <b-form novalidate @submit.stop.prevent>
-      <div class="form-group">
-        <b-form-select v-model="getBranch">
-          <template v-slot:first>
-            <b-form-select-option disabled :value="null">-- Kies een speltak --</b-form-select-option>
-          </template>
-          <b-form-select-option
-            v-for="branch in branches"
-            :key="branch.branchName"
-            :value="branch.branchName"
-          >{{ branch.branchName }}</b-form-select-option>
-        </b-form-select>
-      </div>
-      <div :key="branch" v-if="getBranch != null">
+      <div>
         <FullCalendar
           defaultView="dayGridMonth"
           :editable="true"
@@ -45,7 +33,7 @@
           :key="currentEvent.title"
           ref="eventEditor"
           v-bind:event="currentEvent"
-          v-bind:branch="getBranch"
+          v-bind:branch="branchName"
           v-bind:events="events"
         ></event>
         <div slot="modal-footer" class="w-100 d-flex">
@@ -99,17 +87,16 @@ import keyBoardResize from "@/plugins/keyBoardResize";
 
 export default {
   name: "events",
-  props: ["user", "branches"],
+  props: ["user", "branchName"],
   components: { event, FullCalendar },
   data() {
     return {
-      branch: null,
       returnedEvents: false,
       currentEvent: null,
       calendarPlugins: [dayGridPlugin, interactionPlugin, bootstrap],
       nlLocale: nlLocale,
       events: [],
-      modal: false
+      modal: false,
     };
   },
   created() {
@@ -120,40 +107,62 @@ export default {
       document.head.appendChild(file);
       keyBoardResize();
     }
+    this.returnedEvents = false;
+    this.branchEvents = [];
+    this.currentEvent = null;
+    this.events = [];
+    axios
+      .post("/event/get/branch", { branchName: this.branchName })
+      .then((response) => {
+        this.returnedEvents = true;
+        response.data.forEach((event) => {
+          this.events.push({
+            title: event.eventName,
+            start: event.startDate,
+            end: event.endDate,
+            extendedProps: {
+              description: event.eventDescription,
+              visible: event.visible,
+            },
+          });
+        });
+      })
+      .catch(() => {
+        this.returnedEvents = true;
+      });
   },
   beforeMount() {
     window.addEventListener("hashchange", () => {
       if (this.modal && isMobile()) {
         this.$bvModal.hide("modal");
-      }else{
-        return
+      } else {
+        return;
       }
-      
     });
   },
   methods: {
     addState() {
       if (this.modal && isMobile()) {
-        history.pushState(null, null, "#event"); 
+        history.pushState(null, null, "#event");
       }
     },
-    removeState(){
+    removeState() {
       if (location.hash == "#event" && isMobile()) {
-         window.history.back();
+        window.history.back();
       }
     },
     deleteEvent() {
       axios
         .post("/event/delete", {
           eventName: this.currentEvent.title,
-          branchName: this.branch,
+          branchName: this.branchName,
           startDate: this.currentEvent.start,
-          endDate: this.currentEvent.end
+          endDate: this.currentEvent.end,
         })
-        .then(response => {
+        .then((response) => {
           if (response.status == 200) {
             this.events = this.events.filter(
-              event =>
+              (event) =>
                 event.title != this.currentEvent.title ||
                 event.start !=
                   this.currentEvent.start.toISOString().split("T")[0] ||
@@ -163,29 +172,29 @@ export default {
             this.$bvToast.toast("Evenement verwijderd", {
               title: "Succes",
               autoHideDelay: 1000,
-              appendToast: true
+              appendToast: true,
             });
           } else {
             this.$bvToast.toast("Unknown", {
               title: "Error",
               autoHideDelay: 1000,
-              appendToast: true
+              appendToast: true,
             });
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.submitting = false;
           if (error.response.status === 401) {
             this.$bvToast.toast("Unauthorised", {
               title: "Error",
               autoHideDelay: 1000,
-              appendToast: true
+              appendToast: true,
             });
           } else {
             this.$bvToast.toast(error + "", {
               title: "Error",
               autoHideDelay: 1000,
-              appendToast: true
+              appendToast: true,
             });
           }
         });
@@ -195,7 +204,7 @@ export default {
         this.$bvToast.toast("Unkown", {
           title: "Error",
           autoHideDelay: 1000,
-          appendToast: true
+          appendToast: true,
         });
       }
       this.currentEvent = null;
@@ -208,7 +217,7 @@ export default {
         title: null,
         start: arg.start,
         end: arg.end,
-        extendedProps: { description: "[]", visible: 0 }
+        extendedProps: { description: "[]", visible: 0 },
       };
       this.$bvModal.show("modal");
     },
@@ -228,14 +237,14 @@ export default {
           eventName: arg.event.title,
           startDate: arg.event.start,
           endDate: arg.event.end,
-          branchName: this.branch,
+          branchName: this.branchName,
           prevStartDate: previousEvent.start,
-          prevEndDate: previousEvent.end
+          prevEndDate: previousEvent.end,
         })
-        .then(response => {
+        .then((response) => {
           if (response.status == 200) {
             var event = this.events.filter(
-              event =>
+              (event) =>
                 event.title == arg.event.title &&
                 event.start ==
                   previousEvent.start.toISOString().split("T")[0] &&
@@ -248,28 +257,28 @@ export default {
             this.$bvToast.toast("Unknown", {
               title: "Error",
               autoHideDelay: 1000,
-              appendToast: true
+              appendToast: true,
             });
           }
         })
-        .catch(error => {
+        .catch((error) => {
           arg.revert();
           this.submitting = false;
           if (error.response.status === 401) {
             this.$bvToast.toast("Unauthorised", {
               title: "Error",
               autoHideDelay: 1000,
-              appendToast: true
+              appendToast: true,
             });
           } else {
             this.$bvToast.toast(error + "", {
               title: "Error",
               autoHideDelay: 1000,
-              appendToast: true
+              appendToast: true,
             });
           }
         });
-    }
+    },
   },
   computed: {
     newEvent() {
@@ -278,38 +287,7 @@ export default {
       }
       return true;
     },
-    getBranch: {
-      get: function() {
-        return this.branch;
-      },
-      set: function(val) {
-        this.returnedEvents = false;
-        this.branchEvents = [];
-        this.branch = val;
-        this.currentEvent = null;
-        this.events = [];
-        axios
-          .post("/event/get/branch", { branchName: this.getBranch })
-          .then(response => {
-            this.returnedEvents = true;
-            response.data.forEach(event => {
-              this.events.push({
-                title: event.eventName,
-                start: event.startDate,
-                end: event.endDate,
-                extendedProps: {
-                  description: event.eventDescription,
-                  visible: event.visible
-                }
-              });
-            });
-          })
-          .catch(() => {
-            this.returnedEvents = true;
-          });
-      }
-    }
-  }
+  },
 };
 </script>
 

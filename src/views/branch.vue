@@ -11,7 +11,7 @@
         <div v-if="returned && branch.images.length > 0">
           <hr />
           <h2>Foto's</h2>
-          <b-overlay :show="imagesLoading">
+          <b-overlay opacity="1" variant="white" :show="imagesLoading">
             <flickity
             v-images-loaded="loaded"
             class="carousel"
@@ -52,7 +52,7 @@
           class="fb-comments"
           :data-href="'http://www.scoutinghuissenzand.nl/#scoutinghuissenzand'+ branchName"
           data-numposts="10"
-          data-width="fluid"
+          data-width="100%"
         ></div>
       </b-card>
     </b-container>
@@ -102,6 +102,7 @@ export default {
         freeScroll: false
       },
       imagesLoading: true,
+      facebookLoading: true
     };
   },
   methods: {
@@ -179,7 +180,7 @@ export default {
         router.push("/error/404");
       });
     Vue.loadScript(
-      "https://connect.facebook.net/nl_NL/sdk.js#xfbml=1&version=v2.4"
+      "https://connect.facebook.net/nl_NL/sdk.js#xfbml=1&version=v8.0&appId=273465613781500&autoLogAppEvents=1"
     ).then(() => {
       window.FB.XFBML.parse();
     });

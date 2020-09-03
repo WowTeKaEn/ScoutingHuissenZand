@@ -176,7 +176,7 @@ export default {
               }
               if (response.status == 202) {
                 this.$bvToast.toast(
-                  "Bestaande tak aangepast, Maar mail account moet handmatig worden aangepast",
+                  "Bestaande tak aangepast, Maar mail account moet handmatig worden aangepast of probeer het opnieuw.",
                   {
                     title: "Succes",
                     autoHideDelay: 5000,
@@ -200,8 +200,8 @@ export default {
           })
           .catch(error => {
             this.submitting = false;
-            if (error.response.status === 401) {
-              this.$bvToast.toast("Unauthorised", {
+            if (error.response.status === 405) {
+              this.$bvToast.toast("Unauthorized: OAuth Token possibilly expired. Neem contact op met de admin of stel handmatig de email accounts in", {
                 title: "Error",
                 autoHideDelay: 5000,
                 appendToast: true

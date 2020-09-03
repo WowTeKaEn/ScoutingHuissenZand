@@ -1,24 +1,24 @@
 <?php
 
-// "email/parse" => "Mail/parseEmail.php",
-
-header("Access-Control-Allow-Origin: http://localhost:8080");
+header("Access-Control-Allow-Origin: ".$_SERVER['HTTP_ORIGIN'] );
 header("Access-Control-Allow-Credentials: true");
 
 $method = $_SERVER['REQUEST_METHOD'];
 if ($method == "OPTIONS") {
-    header('Access-Control-Allow-Origin: http://localhost:8080');
     header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method,Access-Control-Request-Headers, Authorization, cache-control");
     header("HTTP/1.1 200 OK");
     die();
     }
 
 $endPoints = ["info" => "getNavInfo.php",
+"user/delete" => "account/deleteUser.php",
  "user/logout" => "account/log-out.php",
  "user/login" => "account/login.php",
  "user/signup" => "account/sign-up.php",
  "user/get" => "account/getUser.php",
+ "user/get/all" => "account/getAllUsers.php",
  "user/validate" => "account/validate.php",
+ "user/promote" => "account/setAdmin.php",
   "branch/get" => "branch/getBranch.php",
   "branch/assign" => "branch/insertBranch.php",
   "branch/update" => "branch/updateBranch.php",
