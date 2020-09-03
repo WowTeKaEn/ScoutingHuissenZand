@@ -21,7 +21,7 @@
 
     <b-sidebar v-model="sideBarEvent" id="sidebar-right" :title="sidebarTitle" right shadow>
       <div class="w-100 d-flex">
-        <span class="mx-auto" v-if="sideBarEvent">{{ getFormattedDate }}</span>
+        <span class="mx-auto pl-3 pr-1" v-if="sideBarEvent">{{ getFormattedDate }}</span>
       </div>
       <quillViewer v-bind:ready="sideBarEvent" v-bind:quill="sidebarDescription"></quillViewer>
     </b-sidebar>

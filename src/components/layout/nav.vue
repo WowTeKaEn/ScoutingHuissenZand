@@ -15,8 +15,9 @@
     </div>
     <b-navbar-toggle target="nav-collapse">
       <template v-slot:default="{ expanded }">
-        <b-icon v-if="expanded" icon="chevron-bar-up"></b-icon>
-        <b-icon v-else icon="chevron-bar-down"></b-icon>
+        <div :class="expanded ? 'nav-collapse-btn active':'nav-collapse-btn'">
+            <div></div>
+          </div>
       </template>
     </b-navbar-toggle>
     <b-collapse id="nav-collapse" is-nav class="w-75 ml-auto">
@@ -46,9 +47,54 @@
   float: none;
 }
 .navbar-toggler {
-  width: 60px;
-  height: 60px;
-  border: none !important;
+  height: 70px;
+  width: 70px;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0;
+  border: none
+}
+
+.navbar-toggler:hover {
+  background-color: #3636361e;
+}
+
+
+.nav-collapse-btn {
+  margin: auto auto;
+  position: relative;
+  right: 0;
+  top: 0;
+  width: 48px;
+  height: 41px;
+  padding: 0.5em 0.5em 0.5em 0.5em;
+}
+
+
+.nav-collapse-btn:after,
+.nav-collapse-btn:before,
+.nav-collapse-btn div {
+  background-color: #363636;
+  content: "";
+  display: block;
+  height: 1px;
+  transition: all 0.1s ease-in-out;
+}
+
+.nav-collapse-btn div {
+  margin: 9px 0;
+}
+
+.nav-collapse-btn.active:before {
+  transform: translateY(10px) rotate(45deg);
+}
+
+.nav-collapse-btn.active:after {
+  transform: translateY(-10px) rotate(-45deg);
+}
+
+.nav-collapse-btn.active div {
+  transform: scale(0);
 }
 
 .navbar.transition {

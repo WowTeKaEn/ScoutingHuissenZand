@@ -1,12 +1,12 @@
 <template>
-    <section class="clean-block p-0 py-5 dark">
-      <b-container>
-        <b-card v-if="returned">
-          <h1>Valideren</h1>
-          <p>{{ validated ? "Uw account is gevalideerd en er is een email naar de admin gestuurd" : "Er is iets mis gegaan" }}</p>
-        </b-card>
-      </b-container>
-    </section>
+  <section class="clean-block p-0 py-5 dark">
+    <b-container>
+      <b-card v-if="returned">
+        <h1>Valideren</h1>
+        <p>{{ validated ? "Uw account is gevalideerd en er is een email naar de admin gestuurd" : "Er is iets mis gegaan" }}</p>
+      </b-card>
+    </b-container>
+  </section>
 </template>
 
 
@@ -20,18 +20,18 @@ export default {
   data() {
     return {
       validated: null,
-      returned: false
+      returned: false,
     };
   },
   methods: {
     editTab(tab) {
       this.tab = tab;
-    }
+    },
   },
   created() {
     axios
-      .post("/user/validate",{email: this.who, token: this.token})
-      .then(response => {
+      .post("/user/validate", { email: this.who, token: this.token })
+      .then((response) => {
         this.returned = true;
         if (response.status === 200) {
           this.validated = true;
@@ -40,18 +40,26 @@ export default {
           this.$bvToast.toast("Unknown", {
             title: "Error",
             autoHideDelay: 5000,
-            appendToast: true
+            appendToast: true,
           });
         }
       })
-      .catch(error => {
+      .catch((error) => {
         this.validated = false;
         this.returned = true;
-        this.$bvToast.toast(error + "", {
-          title: "Error",
-          autoHideDelay: 5000,
-          appendToast: true
-        });
+        if (error.response.status === 409) {
+          this.$bvToast.toast("Account al gevalideerd", {
+            title: "Melding",
+            autoHideDelay: 5000,
+            appendToast: true,
+          });
+        } else {
+          this.$bvToast.toast(error + "", {
+            title: "Error",
+            autoHideDelay: 5000,
+            appendToast: true,
+          });
+        }
       });
   },
 };

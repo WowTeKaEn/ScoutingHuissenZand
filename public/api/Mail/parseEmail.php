@@ -14,16 +14,16 @@ function email_parse() {
 
         foreach ($branches as $key => $branch) {
             if (strtolower($branch["branchName"]) == strtolower($branchTo[0])) {
-                http_response_code(sendGridMail::getInstance()->sendMail("FW: " . $_POST["subject"], "Doorgestuurd bericht van " . $_POST["from"] . "<br><br>" . $_POST["html"],[], $branch["branchAdmin"], $branch["branchName"]));
+                http_response_code(Mailer::getInstance()->sendMail("FW: " . $_POST["subject"], "Doorgestuurd bericht van " . $_POST["from"] . "<br><br>" . $_POST["html"],[], $branch["branchAdmin"], $branch["branchName"]));
                 exit;
             } else if ($branchTo[0] = "admin") {
-                http_response_code(sendGridMail::getInstance()->sendMail("FW: " . $_POST["subject"], "Doorgestuurd bericht van " . $_POST["from"] . "<br><br>" . $_POST["html"]));
+                http_response_code(Mailer::getInstance()->sendMail("FW: " . $_POST["subject"], "Doorgestuurd bericht van " . $_POST["from"] . "<br><br>" . $_POST["html"]));
                 exit;
             }
         }
-        sendGridMail::getInstance()->sendMail("Something went wrong", "But I'm not certain what. ");
+        Mailer::getInstance()->sendMail("Something went wrong", "But I'm not certain what. ");
     }else{
-        sendGridMail::getInstance()->sendMail("Something went wrong", "But I'm not certain what. POST: ". var_export($_POST, true));
+        Mailer::getInstance()->sendMail("Something went wrong", "But I'm not certain what. POST: ". var_export($_POST, true));
     }
 }
 

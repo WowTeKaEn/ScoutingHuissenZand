@@ -1,6 +1,6 @@
 {
     "require": {
-        "sendgrid/sendgrid": "^7.5",
-        "cloudinary/cloudinary_php": "^1.16"
+        "cloudinary/cloudinary_php": "^1.16",
+        "phpmailer/phpmailer": "^6.1"
     }
 }

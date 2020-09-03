@@ -1,22 +1,7 @@
 <template>
-  <b-card v-if="branches.length != 0" class="mb-3">
-    <h1>Foto's voor speltakken</h1>
-    <b-form novalidate @submit.stop.prevent>
-      <div class="form-group">
-        <b-form-select v-model="getBranch">
-          <template v-slot:first>
-            <b-form-select-option disabled :value="null">-- Kies een speltak --</b-form-select-option>
-          </template>
-          <b-form-select-option
-            v-for="branch in branches"
-            :key="branch.branchName"
-            :value="branch.branchName"
-          >{{ branch.branchName }}</b-form-select-option>
-        </b-form-select>
-      </div>
-      <div :key="branch" v-if="getBranch != null">
-        <imageUpload @saveImage="addToImages" v-bind:branchName="getBranch"></imageUpload>
-      </div>
+  <b-card class="mb-3">
+    <h1>Foto's</h1>
+        <imageUpload @saveImage="addToImages" v-bind:branchName="branch.branchName"></imageUpload>
       <hr />
       <b-container>
         <b-row align-v="center">
@@ -33,7 +18,6 @@
           </b-col>
         </b-row>
       </b-container>
-    </b-form>
   </b-card>
 </template>
 
@@ -42,19 +26,22 @@ import axios from "@/plugins/axios.js";
 import imageUpload from "./imageUpload.vue";
 
 export default {
-  name: "events",
-  props: ["user", "branches"],
+  name: "imageEditor",
+  props: ["user", "branch"],
   components: { imageUpload },
   data() {
     return {
-      branch: null,
-      returnedImages: false,
       images: []
     };
   },
+  created(){
+    this.branch.images.forEach(img => {
+      this.images.push({ branchName: this.branch.branchName, url: img.url, deleting:false, });
+    })
+  },
   methods: {
     addToImages(image) {
-      this.images.push({ branchName: this.getBranch, url: image, deleting:false, });
+      this.images.push({ branchName: this.branch.branchName, url: image, deleting:false, });
     },
     removeImage(image) {
       this.images.forEach(i => {
@@ -64,7 +51,7 @@ export default {
       })
       axios
         .post("/branch/photo/delete", {
-          branchName: this.getBranch,
+          branchName: this.branch.branchName,
           image: image.url
         })
         .then(response => {
@@ -97,28 +84,6 @@ export default {
         });
     }
   },
-  computed: {
-    getBranch: {
-      get: function() {
-        return this.branch;
-      },
-      set: function(val) {
-        this.branch = val;
-        axios
-          .post("/branch/get", { branchName: this.getBranch })
-          .then(response => {
-            response.data.images.forEach(image => {
-              image.deleting = false;
-              this.images.push({branchName: image.branchName, url: image.url, deleting: false})
-            });
-            this.returnedImages = true;
-          })
-          .catch(() => {
-            this.returnedImages = true;
-          });
-      }
-    }
-  }
 };
 </script>
 

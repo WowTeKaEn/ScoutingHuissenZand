@@ -8,6 +8,7 @@ function create_account($branchName, $branchAdmin) {
         "nickname"      => $branchName,
         "password"      => $password,
         "department_id" => 1,
+        "birthday" => "1990-10-10",
         "name"          => array(
             "first"  => $branchName,
             "last"   => "Huissen Zand",
@@ -32,39 +33,49 @@ function update_user($branchName, $dismiss = false, $branchAdmin = "") {
     $ch         = user_curl_init();
     $password   = "";
     $userId     = get_user_id($branchName);
-    if ($userId !== false) {
+    if ($userId == false) {
+        create_account($branchName,$branchAdmin);
         $endpoint = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
-        echo "<" . $endpoint . ">";
+        curl_setopt($ch, CURLOPT_URL, $endpoint . get_user_id($branchName) . "/");
+    }else{
+        $endpoint = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
         curl_setopt($ch, CURLOPT_URL, $endpoint . $userId . "/");
     }
     if (!$dismiss) {
         $password         = randomPassword();
         $data["password"] = $password;
     }
-    var_dump($data);
-    var_dump(curl_getinfo($ch, CURLINFO_EFFECTIVE_URL));
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PATCH");
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-    // curl_setopt($ch, CURLOPT_NOBODY, true);
     curl_exec($ch);
+
     $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     curl_close($ch);
     if ($httpcode == 200 && !$dismiss) {
         return send_account_details($branchName, $branchAdmin, $password);
     }
+    if($httpcode == 401){
+        http_response_code(405);
+        exit;
+    }
+
     return $httpcode == 200;
 }
 
 function send_account_details($branchName, $branchAdmin, $password) {
     require_once "Mail/Mail.php";
-    if (sendGridMail::getInstance()->sendMail("Inlog gegevens voor email account", "
-        <p>Gebruikersnaam: " . $branchName . "@scoutinghuissenzand.nl<br>
-        Wachtwoord: " . $password . "<br>
-        Mail portaal: <a href='https://mail.yandex.com/'>https://mail.yandex.com/</a><br>
-        Verander na inloggen meteen je wachtwoord.<br><br>
-        Gebruik dit email adres niet voor persoonlijke doeleinden.<br>
-        De admin kan mocht het nodig zijn ook bij dit email adres.
-        </p>", [], $branchAdmin, ucfirst($branchName) . " Admin") != 202) {
+    $temp = Mailer::getInstance()->sendMail("Inlog gegevens voor email account", "
+    <p>Gebruikersnaam: " . $branchName . "@scoutinghuissenzand.nl<br>
+    Wachtwoord: " . $password . "<br>
+    Mail portaal waar het wachtwoord geldt: <a href='https://mail.yandex.com/'>https://mail.yandex.com/</a><br>
+    Voor het makkelijk doorsturen van emails van Yandex naar Gmail, Hotmail of een andere mail service volg <a href='https://yandex.com/support/mail/web/preferences/filters/forwarding.html'>deze<a/> uitleg.<br/>
+    Verander na inloggen meteen je wachtwoord.<br><br>
+    Gebruik dit email adres niet voor persoonlijke doeleinden.<br>
+    De admin kan mocht het nodig zijn ook bij dit email adres.
+    </p>", $branchAdmin, ucfirst($branchName) . " Admin");
+    var_dump($temp);
+    if ($temp !== 202) {
+        
         return false;
     }
     return true;
@@ -103,7 +114,11 @@ function get_users() {
     $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
     if ($httpcode == 200) {
         return json_decode($output, true, 512, JSON_BIGINT_AS_STRING);
+    }else if($httpcode == 401){
+        http_response_code(405);
+        exit;
     }
+
     return false;
 }
 
