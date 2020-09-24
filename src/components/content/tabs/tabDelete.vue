@@ -18,7 +18,7 @@
 
 <script>
 import axios from "@/plugins/axios.js";
-// import router from "@/router/index.js"
+import Vue from "@/main.js"
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 
 export default {
@@ -47,11 +47,7 @@ export default {
               }
             }
           } else {
-            this.$bvToast.toast("Unknown", {
-              title: "Error",
-              autoHideDelay: 5000,
-              appendToast: true
-            });
+            this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
           }
         })
         .catch(error => {
@@ -78,11 +74,7 @@ export default {
           }
         })
         .catch(error => {
-          this.$bvToast.toast(error + "", {
-            title: "Error",
-            autoHideDelay: 5000,
-            appendToast: true
-          });
+          this.$bvToast.toast(error + "", Vue.toastObject("Error"));
         });
     }
   }

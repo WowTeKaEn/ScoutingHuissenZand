@@ -5,6 +5,9 @@ const CompressionPluginConfig = new CompressionPlugin({
 
 module.exports = {
   productionSourceMap: false,
+  indexPath: process.env.NODE_ENV === 'production'
+    ? 'index.php'
+    : 'index.html',
   chainWebpack(config) {
     config.plugins.delete('prefetch');
     

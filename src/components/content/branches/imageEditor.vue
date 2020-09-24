@@ -1,29 +1,87 @@
 <template>
-  <b-card class="mb-3">
+  <b-card class="mb-3" v-if="returned">
     <h1>Foto's</h1>
-        <imageUpload @saveImage="addToImages" v-bind:branchName="branch.branchName"></imageUpload>
-      <hr />
-      <b-container>
-        <b-row align-v="center">
-          <b-col class="img-col p-1" v-for="image in images" :key="image.url">
-              <b-overlay class="d-flex img-controls-out" :show="image.deleting" rounded="sm">
-                <div class="img-smooth" :style="{backgroundImage: `url('${image.url}')`}"></div>
-                <b-button
-                  class="img-controls m-auto"
-                  @click="removeImage(image)"
-                  variant="danger"
-                >Verwijderen</b-button>
-                
-              </b-overlay>
-          </b-col>
-        </b-row>
-      </b-container>
+    <h3>Albums</h3>
+    <label for="new-album-name">Nieuw album aanmaken</label>
+    <div class="d-flex mb-3">
+      <b-input
+        id="new-album-name"
+        v-model="newAlbumName"
+        placeholder="Album naam"
+      ></b-input>
+      <b-button
+        class="ml-3"
+        variant="primary"
+        @click="createAlbum(newAlbumName)"
+      >
+        <span>Aanmaken</span>
+      </b-button>
+    </div>
+    <table v-if="albums.length > 0" class="w-100 mb-2">
+      <tr>
+        <th>Album</th>
+        <th>Aanpassen</th>
+        <th>Verwijder</th>
+      </tr>
+      <tr v-for="(album, index) in albums" :key="album.id">
+        <td>{{ album.name }}</td>
+        <td>
+          <b-button variant="primary" size="sm" @click="currentAlbum = index">
+            <span>Aanpassen</span>
+          </b-button>
+        </td>
+        <td>
+          <b-button @click="deleteAlbum(index)" size="sm" variant="danger"
+            >Verwijder</b-button
+          >
+        </td>
+      </tr>
+    </table>
+
+    <strong v-if="currentAlbum != null"
+      >Album: {{ albums[currentAlbum].name }}</strong
+    >
+    <imageUpload
+      v-if="currentAlbum != null"
+      @saveImages="addToImages"
+      v-bind:index="currentAlbum"
+      v-bind:album="albums[currentAlbum]"
+      :key="currentAlbum"
+    ></imageUpload>
+    <hr />
+    <b-container v-if="currentAlbum != null">
+      <b-row :key="reload" align-v="center">
+        <b-col
+          class="img-col p-1"
+          v-for="(image, index) in albums[currentAlbum].images"
+          :key="image.url"
+        >
+          <b-overlay
+            class="d-flex img-controls-out"
+            :show="image.deleting"
+            rounded="sm"
+          >
+            <div
+              class="img-smooth"
+              :style="{ backgroundImage: `url('${image.url}')` }"
+            ></div>
+            <b-button
+              class="img-controls m-auto"
+              @click="removeImage(image, currentAlbum, index)"
+              variant="danger"
+              >Verwijderen</b-button
+            >
+          </b-overlay>
+        </b-col>
+      </b-row>
+    </b-container>
   </b-card>
 </template>
 
 <script>
 import axios from "@/plugins/axios.js";
 import imageUpload from "./imageUpload.vue";
+import Vue from "@/main.js";
 
 export default {
   name: "imageEditor",
@@ -31,58 +89,83 @@ export default {
   components: { imageUpload },
   data() {
     return {
-      images: []
+      returned: false,
+      albums: [],
+      currentAlbum: null,
+      newAlbumName: null,
+      reload: 0,
     };
   },
-  created(){
-    this.branch.images.forEach(img => {
-      this.images.push({ branchName: this.branch.branchName, url: img.url, deleting:false, });
-    })
+  created() {
+    axios
+      .post("/branch/albums/get", {
+        branchName: this.branch.branchName,
+      })
+      .then((response) => {
+        this.albums = response.data;
+        this.returned = true;
+      });
   },
   methods: {
-    addToImages(image) {
-      this.images.push({ branchName: this.branch.branchName, url: image, deleting:false, });
+    deleteAlbum(index) {
+      axios
+        .post("/branch/album/delete", {
+          branchName: this.branch.branchName,
+          albumId: this.albums[index].id,
+        })
+        .then(() => {
+          if (index == this.currentAlbum) {
+            this.currentAlbum = null;
+          }
+          this.albums.splice(index, 1);
+        });
     },
-    removeImage(image) {
-      this.images.forEach(i => {
-        if(i.url == image.url){
-          i.deleting = true;
-        }
-      })
+    createAlbum(albumName) {
+      axios
+        .post("/branch/album/insert", {
+          branchName: this.branch.branchName,
+          albumName: albumName,
+        })
+        .then((response) => {
+          response.data[0].images = [];
+          this.albums.push(response.data[0]);
+        });
+    },
+    addToImages(images, id) {
+      for (let i = 0; i < images.length; i++) {
+        this.albums[id].images.unshift({
+          url: images[i].url,
+          deleting: false,
+        });
+      }
+    },
+    removeImage(image, index, imageId) {
+      this.albums[index].images[imageId].deleting = true;
+      this.reload++;
       axios
         .post("/branch/photo/delete", {
-          branchName: this.branch.branchName,
-          image: image.url
+          albumId: this.albums[index].id,
+          image: image.url,
         })
-        .then(response => {
+        .then((response) => {
           this.uploading = false;
           if (response.status == 200) {
-            this.images = this.images.filter(i => i.url != image.url);
+            this.albums[index].images = this.albums[index].images.filter(
+              (i) => i.url != image.url
+            );
           } else {
-            this.$bvToast.toast("Unknown", {
-              title: "Error",
-              autoHideDelay: 1000,
-              appendToast: true
-            });
+            this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
           }
         })
-        .catch(error => {
+        .catch((error) => {
           this.uploading = false;
           if (error.response.status === 401) {
-            this.$bvToast.toast("Unauthorised", {
-              title: "Error",
-              autoHideDelay: 1000,
-              appendToast: true
-            });
+            this.$bvToast.toast("Unauthorised", Vue.toastObject("Error"));
           } else {
-            this.$bvToast.toast(error + "", {
-              title: "Error",
-              autoHideDelay: 1000,
-              appendToast: true
-            });
+            this.$bvToast.toast(error + "", Vue.toastObject("Error"));
           }
         });
-    }
+    },
   },
 };
 </script>

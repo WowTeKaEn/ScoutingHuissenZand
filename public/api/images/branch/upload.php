@@ -1,14 +1,19 @@
 <?php
 
 function branch_photo_upload() {
-    $return = new \stdClass();
 
     try {
         session_start();
-        if (isset($_POST["branchName"]) && isset($_SESSION["user"]) && $_SESSION["user"]["activated"] && ($_SESSION["user"]["admin"] || sizeof($_SESSION["user"]["branches"]) > 0)) {
-            foreach ($_SESSION["user"]["branches"] as $branch) {
-                if ($branch["branchName"] == $_POST["branchName"]) {
+        if (isset($_POST["albumId"]) && isset($_SESSION["user"]) && $_SESSION["user"]["activated"] && ($_SESSION["user"]["admin"] || sizeof($_SESSION["user"]["branches"]) > 0)) {
                     require 'databaseAccess.php';
+
+
+                    $ownsAlbum = db::getInstance()->preparedQuery("SELECT branchAdmin from branch where branchName in (select branchName from branchalbum where id = ?)", [$_POST["albumId"]]);
+
+                    if($ownsAlbum[0]["branchAdmin"] !== $_SESSION["user"]["email"]){
+                        http_response_code(401);
+                        return;
+                    }
 
                     \Cloudinary::config(array(
                         "cloud_name" => $_ENV["CLOUDINARY_CLOUD_NAME"],
@@ -19,28 +24,41 @@ function branch_photo_upload() {
 
                     function create_photo($file_path, $orig_name) {
                         # Upload the received image file to Cloudinary
-                        $result = \Cloudinary\Uploader::upload($file_path, array(
+                        $res = \Cloudinary\Uploader::upload($file_path, array(
                             "tags" => "scoutingImage",
                         ));
 
-                        unlink($file_path);
-                        if ($result) {
-                            db::getInstance()->preparedInsert("INSERT INTO `branchimages` (branchName,url) VALUES (?,?)", [$_POST["branchName"], $result["secure_url"]]);
-                            http_response_code(201);
+                        
+                        if ($res) {
+
+                            $pdoResult = db::getInstance()->preparedInsert("INSERT INTO `branchimages`
+                             (albumId,url,w,h) select ?,?,?,?", [$_POST["albumId"], $res["secure_url"],$res["width"],$res["height"]]);
+                            if($pdoResult){
+                                http_response_code(201);
+                            }else{
+                                http_response_code(500);
+                            }
                         } else {
                             http_response_code(500);
                         }
-                        return $result;
+                        unlink($file_path);
+                        return $res;
                     }
 
-                    $result            = create_photo($_FILES["file"]["tmp_name"], $_FILES["file"]["name"]);
-                    $return->url       = $result["secure_url"];
-                    $return->public_id = $result["public_id"];
+                    $total = count($_FILES['files']['name']);
+
+                    $result = [];
+
+
+                    for( $i=0 ; $i < $total ; $i++ ) {
+                        $result[$i]            = create_photo($_FILES["files"]["tmp_name"][$i], $_FILES["files"]["name"][$i]);
+                        $return[$i]["url"]      = $result[$i]["secure_url"];
+                        $return[$i]["public_id"] = $result[$i]["public_id"];
+                    }
+
+                   
                     echo json_encode($return);
                     exit;
-                }
-            }
-            http_response_code(401);
         } else {
             http_response_code(401);
         }

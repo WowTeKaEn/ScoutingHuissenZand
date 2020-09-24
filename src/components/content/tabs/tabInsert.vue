@@ -29,7 +29,7 @@
 <script>
 import axios from "@/plugins/axios.js";
 import editor from "../editor/editor"
-// import router from "@/router/index.js"
+import Vue from "@/main.js"
 
 export default {
   name: "tabInsert",
@@ -39,7 +39,6 @@ export default {
       submitting: false,
       tabName: null,
       tabDescription: null,
-      
       tabKey: 0
     };
   },
@@ -65,53 +64,25 @@ export default {
             this.submitting = false;
             if (response.status == 201) {
               this.tabs.push({ tabName: this.tabName });
-              this.$bvToast.toast("Tab toegevoegd", {
-                title: "Succes",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+              this.$bvToast.toast("Tab toegevoegd", Vue.toastObject("Succes"));
             }else if(response.status == 200){
-              this.$bvToast.toast("Bestaande tab aangepast", {
-                title: "Succes",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+              this.$bvToast.toast("Bestaande tab aangepast", Vue.toastObject("Succes"));
             } else {
-              this.$bvToast.toast("Unknown", {
-                title: "Error",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+              this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
             }
           })
           .catch(error => {
             this.submitting = false;
             if (error.response.status === 401) {
-              this.$bvToast.toast("Unauthorised", {
-                title: "Error",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+              this.$bvToast.toast("Unauthorised", Vue.toastObject("succes"));
             } else if (error.response.status == 400) {
-              this.$bvToast.toast("Tab niet toegevoegd", {
-                title: "Error",
-                autoHideDelay: 5000,
-                appendToast: true,
-              });
+              this.$bvToast.toast("Tab niet toegevoegd", Vue.toastObject("succes"));
             } else {
-              this.$bvToast.toast(error + "", {
-                title: "Error",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+              this.$bvToast.toast(error + "", Vue.toastObject("succes"));
             }
           });
       } else {
-        this.$bvToast.toast("Vul alle velden in.", {
-          title: "Error",
-          autoHideDelay: 5000,
-          appendToast: true
-        });
+        this.$bvToast.toast("Vul alle velden in.", Vue.toastObject("succes"));
       }
     }
   }

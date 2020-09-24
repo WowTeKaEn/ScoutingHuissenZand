@@ -55,7 +55,8 @@ import axios from "@/plugins/axios.js";
 import events from "@/components/content/events/events.vue";
 import imageEditor from "@/components/content/branches/imageEditor.vue";
 import setCookie from "@/plugins/setCookie.js";
-
+import Vue from "@/main.js"
+ 
 export default {
   name: "staff",
   components: {
@@ -96,20 +97,12 @@ export default {
           }
           this.returned = true;
         } else {
-          this.$bvToast.toast("Unknown", {
-            title: "Error",
-            autoHideDelay: 5000,
-            appendToast: true,
-          });
+          this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
         }
       })
       .catch((error) => {
         this.returned = true;
-        this.$bvToast.toast(error + "", {
-          title: "Error",
-          autoHideDelay: 5000,
-          appendToast: true,
-        });
+        this.$bvToast.toast(error + "", Vue.toastObject("Error"));
         setCookie("loggedIn", "false");
         window.location.href = "/staf";
       });

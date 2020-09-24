@@ -13,7 +13,8 @@
 
 <script>
 import axios from "@/plugins/axios.js";
-
+import Vue from "@/main.js"
+ 
 export default {
   name: "validate",
   props: ["who", "token"],
@@ -37,28 +38,16 @@ export default {
           this.validated = true;
         } else {
           this.validated = false;
-          this.$bvToast.toast("Unknown", {
-            title: "Error",
-            autoHideDelay: 5000,
-            appendToast: true,
-          });
+          this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
         }
       })
       .catch((error) => {
         this.validated = false;
         this.returned = true;
         if (error.response.status === 409) {
-          this.$bvToast.toast("Account al gevalideerd", {
-            title: "Melding",
-            autoHideDelay: 5000,
-            appendToast: true,
-          });
+          this.$bvToast.toast("Account al gevalideerd", Vue.toastObject("Melding"));
         } else {
-          this.$bvToast.toast(error + "", {
-            title: "Error",
-            autoHideDelay: 5000,
-            appendToast: true,
-          });
+          this.$bvToast.toast(error + "", Vue.toastObject("Error"));
         }
       });
   },

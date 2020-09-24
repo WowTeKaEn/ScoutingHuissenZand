@@ -14,6 +14,7 @@ import axios from "@/plugins/axios.js";
 import VueNav from "@/components/layout/nav.vue";
 import VueFooter from "@/components/layout/footer.vue";
 import isMobile from "@/plugins/isMobile";
+import Vue from "@/main.js"
 
 export default {
   name: "App",
@@ -45,19 +46,11 @@ export default {
             this.branches = response.data.branches;
             this.tabs = response.data.tabs;
           } else {
-            this.$bvToast.toast("Unknown", {
-              title: "Error",
-              autoHideDelay: 5000,
-              appendToast: true
-            });
+            this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
           }
         })
         .catch(error => {
-          this.$bvToast.toast(error + "", {
-            title: "Error",
-            autoHideDelay: 5000,
-            appendToast: true
-          });
+          this.$bvToast.toast(error + "", Vue.toastObject("Error"));
         });
     }
   },
@@ -96,14 +89,14 @@ main.page.small-nav {
 }
 
 html, body {
-  height: 100%;
-  width: 100%;
+  min-height: 100vh;
+  max-width: 100%;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
 }
 
 main{
-  display: flex !important;
   flex-direction: column;
   flex: 1 1;
 }

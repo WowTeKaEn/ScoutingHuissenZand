@@ -40,7 +40,8 @@ import axios from "@/plugins/axios.js";
 import teammember from "@/components/teammember.vue";
 import carousel from "@/components/layout/carousel.vue";
 import calendarViewer from "@/components/content/events/calendarViewer";
-
+import Vue from "@/main.js"
+ 
 export default {
   name: "Home",
   props: ["tabs", "branches"],
@@ -82,11 +83,7 @@ export default {
       .catch(error => {
         this.calendarReturned = true;
         if (error.response.status != 404) {
-          this.$bvToast.toast("Kalender kon niet worden opgehaald", {
-            title: "Error",
-            autoHideDelay: 5000,
-            appendToast: true
-          });
+          this.$bvToast.toast("Kalender kon niet worden opgehaald", Vue.toastObject("Error"));
         }
       });
   },

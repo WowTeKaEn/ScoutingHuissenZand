@@ -23,7 +23,8 @@
 import axios from "@/plugins/axios.js";
 import router from "@/router/index.js";
 import quillViewer from "@/components/content/editor/quillViewer";
-
+import Vue from "@/main.js"
+ 
 export default {
   name: "tab",
   props: ["tab"],
@@ -51,11 +52,7 @@ export default {
         if (error.status == 404) {
           router.push("/error/404");
         } else {
-          this.$bvToast.toast(error + "", {
-            title: "Error",
-            autoHideDelay: 5000,
-            appendToast: true
-          });
+          this.$bvToast.toast(error + "", Vue.toastObject("Error"));
         }
       });
   },

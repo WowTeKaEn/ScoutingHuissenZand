@@ -58,7 +58,8 @@
 
 <script>
 import axios from "@/plugins/axios.js";
-
+import Vue from "@/main.js"
+ 
 export default {
   name: "registerForm",
   data() {
@@ -119,27 +120,15 @@ export default {
           .then(response => {
             this.submitting = false;
             if (response.status === 201) {
-              this.$bvToast.toast("Account aangemaakt. Er is een email verstuurd naar uw email voor validatie (dit kan 10 minuten duren)", {
-                title: "Succes",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+              this.$bvToast.toast("Account aangemaakt. Er is een email verstuurd naar uw email voor validatie (dit kan 10 minuten duren)", Vue.toastObject("Succes"));
             }
           })
           .catch(error => {
             this.submitting = false;
             if(error.response.status === 409){
-              this.$bvToast.toast("Email bestaat al", {
-                title: "Error",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+              this.$bvToast.toast("Email bestaat al", Vue.toastObject("Error"));
             }else{
-                this.$bvToast.toast(error + '', {
-                title: "Error",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+                this.$bvToast.toast(error + '', Vue.toastObject("Error"));
             }     
           });
       }
