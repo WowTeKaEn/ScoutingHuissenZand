@@ -88,12 +88,20 @@ main.page.small-nav {
   outline-color: rgba(0, 0, 0, 0) !important;
 }
 
+.btn-sm{
+  border-radius: 1em;
+}
+
 html, body {
   min-height: 100vh;
   max-width: 100%;
   overflow-x: hidden;
   display: flex;
   flex-direction: column;
+}
+
+.card{
+  border-radius: 1em;
 }
 
 main{
