@@ -84,6 +84,7 @@ import bootstrap from "@fullcalendar/bootstrap";
 import nlLocale from "@fullcalendar/core/locales/nl";
 import isMobile from "@/plugins/isMobile";
 import keyBoardResize from "@/plugins/keyBoardResize";
+import Vue from "@/main.js"
 
 export default {
   name: "events",
@@ -169,43 +170,23 @@ export default {
                 event.end != this.currentEvent.end.toISOString().split("T")[0]
             );
             this.$bvModal.hide("modal");
-            this.$bvToast.toast("Evenement verwijderd", {
-              title: "Succes",
-              autoHideDelay: 1000,
-              appendToast: true,
-            });
+            this.$bvToast.toast("Evenement verwijderd", Vue.toastObject("Succes"));
           } else {
-            this.$bvToast.toast("Unknown", {
-              title: "Error",
-              autoHideDelay: 1000,
-              appendToast: true,
-            });
+            this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
           }
         })
         .catch((error) => {
           this.submitting = false;
           if (error.response.status === 401) {
-            this.$bvToast.toast("Unauthorised", {
-              title: "Error",
-              autoHideDelay: 1000,
-              appendToast: true,
-            });
+            this.$bvToast.toast("Unauthorised", Vue.toastObject("Error"));
           } else {
-            this.$bvToast.toast(error + "", {
-              title: "Error",
-              autoHideDelay: 1000,
-              appendToast: true,
-            });
+            this.$bvToast.toast(error + "", Vue.toastObject("Error"));
           }
         });
     },
     closeModal(responseCode) {
       if (responseCode != 200 && responseCode != 201) {
-        this.$bvToast.toast("Unkown", {
-          title: "Error",
-          autoHideDelay: 1000,
-          appendToast: true,
-        });
+        this.$bvToast.toast("Unkown",Vue.toastObject("Error"));
       }
       this.currentEvent = null;
       this.$bvModal.hide("modal");
@@ -254,28 +235,16 @@ export default {
             event.end = arg.event.end.toISOString().split("T")[0];
           } else {
             arg.revert();
-            this.$bvToast.toast("Unknown", {
-              title: "Error",
-              autoHideDelay: 1000,
-              appendToast: true,
-            });
+            this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
           }
         })
         .catch((error) => {
           arg.revert();
           this.submitting = false;
           if (error.response.status === 401) {
-            this.$bvToast.toast("Unauthorised", {
-              title: "Error",
-              autoHideDelay: 1000,
-              appendToast: true,
-            });
+            this.$bvToast.toast("Unauthorised", Vue.toastObject("Error"));
           } else {
-            this.$bvToast.toast(error + "", {
-              title: "Error",
-              autoHideDelay: 1000,
-              appendToast: true,
-            });
+            this.$bvToast.toast(error + "", Vue.toastObject("Error"));
           }
         });
     },

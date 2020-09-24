@@ -29,7 +29,7 @@
 <script>
 import axios from "@/plugins/axios.js";
 import editor from "../editor/editor";
-
+import Vue from "@/main.js"
 
 
 export default {
@@ -64,39 +64,19 @@ export default {
         .then(response => {
           this.submitting = false;
           if (response.status == 200) {
-            this.$bvToast.toast("Bestaande speltak aangepast", {
-              title: "Succes",
-              autoHideDelay: 5000,
-              appendToast: true
-            });
+            this.$bvToast.toast("Bestaande speltak aangepast", Vue.toastObject("Succes"));
           } else {
-            this.$bvToast.toast("Unknown", {
-              title: "Error",
-              autoHideDelay: 5000,
-              appendToast: true
-            });
+            this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
           }
         })
         .catch(error => {
           this.submitting = false;
           if (error.response.status === 401) {
-            this.$bvToast.toast("Ongemachtigd", {
-              title: "Error",
-              autoHideDelay: 5000,
-              appendToast: true
-            });
+            this.$bvToast.toast("Ongemachtigd", Vue.toastObject("Error"));
           } else if (error.response.status == 403) {
-            this.$bvToast.toast("Tak niet aangepast", {
-              title: "Error",
-              autoHideDelay: 5000,
-              appendToast: true,
-            });
+            this.$bvToast.toast("Tak niet aangepast", Vue.toastObject("Error"));
           } else {
-            this.$bvToast.toast(error + "", {
-              title: "Error",
-              autoHideDelay: 5000,
-              appendToast: true
-            });
+            this.$bvToast.toast(error + "", Vue.toastObject("Error"));
           }
         });
     }

@@ -78,6 +78,8 @@
 
 <script>
 import axios from "@/plugins/axios.js";
+import Vue from "@/main.js"
+
 
 export default {
   name: "accountManager",
@@ -97,19 +99,11 @@ export default {
           if (response.status == 200) {
             this.users = this.users.filter((u) => u.email !== user.email);
           } else {
-            this.$bvToast.toast("Unknown", {
-              title: "Error",
-              autoHideDelay: 5000,
-              appendToast: true,
-            });
+            this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
           }
         })
         .catch((error) => {
-          this.$bvToast.toast(error + "", {
-            title: "Error",
-            autoHideDelay: 5000,
-            appendToast: true,
-          });
+          this.$bvToast.toast(error + "", Vue.toastObject("Error"));
         });
     },
     updateActivated(user) {
@@ -119,21 +113,13 @@ export default {
         })
         .then((response) => {
           if (response.status !== 200) {
-            this.$bvToast.toast("Unknown", {
-              title: "Error",
-              autoHideDelay: 5000,
-              appendToast: true,
-            });
+            this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
             user.validated != user.validated;
           }
         })
         .catch((error) => {
           user.validated != user.validated;
-          this.$bvToast.toast(error + "", {
-            title: "Error",
-            autoHideDelay: 5000,
-            appendToast: true,
-          });
+          this.$bvToast.toast(error + "", Vue.toastObject("Error"));
         });
     },
     updateAdmin(user) {
@@ -143,21 +129,13 @@ export default {
         })
         .then((response) => {
           if (response.status !== 200) {
-            this.$bvToast.toast("Unknown", {
-              title: "Error",
-              autoHideDelay: 5000,
-              appendToast: true,
-            });
+            this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
             user.admin != user.admin;
           }
         })
         .catch((error) => {
           user.admin != user.admin;
-          this.$bvToast.toast(error + "", {
-            title: "Error",
-            autoHideDelay: 5000,
-            appendToast: true,
-          });
+          this.$bvToast.toast(error + "", Vue.toastObject("Error"));
         });
     },
   },
@@ -169,20 +147,12 @@ export default {
           this.users = response.data;
           this.returned = true;
         } else {
-          this.$bvToast.toast("Unknown", {
-            title: "Error",
-            autoHideDelay: 5000,
-            appendToast: true,
-          });
+          this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
         }
       })
       .catch((error) => {
         this.returned = true;
-        this.$bvToast.toast(error + "", {
-          title: "Error",
-          autoHideDelay: 5000,
-          appendToast: true,
-        });
+        this.$bvToast.toast(error + "", Vue.toastObject("Error"));
       });
   },
 };

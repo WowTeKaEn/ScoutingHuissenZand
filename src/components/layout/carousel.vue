@@ -9,7 +9,6 @@
     <div class="carousel-cell clean-block clean-hero">
       <div class="text carousel-text">
         <h3>Gidsen</h3>
-        <p>Leuk groepie</p>
       </div>
       <img
         style="object-fit: cover; position:absolute;"
@@ -21,12 +20,22 @@
     <div class="carousel-cell clean-block clean-hero">
       <div class="text carousel-text">
         <h3>Verkenners</h3>
-        <p>Op winterkamp</p>
       </div>
       <img
           style="object-fit: cover;"
           class="d-block w-100"
           src="https://res.cloudinary.com/duj1jfopx/image/upload/v1593523635/88248349_2759330350825431_3042933313594458112_o_fva19f.jpg"
+          alt="image slot"
+        />
+    </div>
+        <div class="carousel-cell clean-block clean-hero">
+      <div class="text carousel-text">
+        <h3>Rowans</h3>
+      </div>
+      <img
+          style="object-fit: cover;"
+          class="d-block w-100"
+          src="https://res.cloudinary.com/duj1jfopx/image/upload/v1600950464/IMG-20190711-WA0004_z0ekqw.jpg"
           alt="image slot"
         />
     </div>

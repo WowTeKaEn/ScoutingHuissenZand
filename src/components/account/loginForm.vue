@@ -44,7 +44,8 @@
 
 <script>
 import axios from "@/plugins/axios.js";
-
+import Vue from "@/main.js"
+ 
 export default {
   name: "loginForm",
   props: ["what","who"],
@@ -105,33 +106,17 @@ export default {
                 window.location.href = "/" + this.what + "/" + this.who;
               }
             } else {
-              this.$bvToast.toast("Unknown", {
-                title: "Error",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+              this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
             }
           })
           .catch(error => {
             this.submitting = false;
             if (error.response.status === 401) {
-              this.$bvToast.toast("Email of wachtwoord klopt niet", {
-                title: "Error",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+              this.$bvToast.toast("Email of wachtwoord klopt niet", Vue.toastObject("Error"));
             } else if (error.response.status === 403) {
-              this.$bvToast.toast("Account nog niet geverifieerd", {
-                title: "Error",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+              this.$bvToast.toast("Account nog niet geverifieerd", Vue.toastObject("Error"));
             } else {
-              this.$bvToast.toast(error + "", {
-                title: "Error",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+              this.$bvToast.toast(error + "", Vue.toastObject("Error"));
             }
           });
       }

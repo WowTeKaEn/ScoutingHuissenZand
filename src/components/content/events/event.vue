@@ -19,7 +19,8 @@
 import editor from "../editor/editor";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 import axios from "@/plugins/axios.js";
-
+import Vue from "@/main.js"
+ 
 export default {
   name: "event",
   props: ["event","events","branch"],
@@ -59,41 +60,21 @@ export default {
               this.event.setExtendedProp("visible",this.visible);
               this.$emit('correct-submit',response.status);
             } else {
-              this.$bvToast.toast("Unknown", {
-                title: "Error",
-                autoHideDelay: 1000,
-                appendToast: true
-              });
+              this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
             }
           })
           .catch(error => {
             this.submitting = false;
             if (error.response.status === 401) {
-              this.$bvToast.toast("Unauthorised", {
-                title: "Error",
-                autoHideDelay: 1000,
-                appendToast: true
-              });
+              this.$bvToast.toast("Unauthorised", Vue.toastObject("Error"));
             } else if (error.response.status == 400) {
-              this.$bvToast.toast("Evenement niet toegevoegd", {
-                title: "Error",
-                autoHideDelay: 1000,
-                appendToast: true,
-              });
+              this.$bvToast.toast("Evenement niet toegevoegd", Vue.toastObject("Error"));
             } else {
-              this.$bvToast.toast(error + "", {
-                title: "Error",
-                autoHideDelay: 1000,
-                appendToast: true
-              });
+              this.$bvToast.toast(error + "", Vue.toastObject("Error"));
             }
           });
       } else {
-        this.$bvToast.toast("Vul alle velden in.", {
-          title: "Error",
-          autoHideDelay: 1000,
-          appendToast: true
-        });
+        this.$bvToast.toast("Vul alle velden in.", Vue.toastObject("Error"));
       }
     }
   },

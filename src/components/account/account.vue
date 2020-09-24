@@ -38,6 +38,7 @@
 import axios from "@/plugins/axios.js";
 import setCookie from "@/plugins/setCookie.js";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
+import Vue from "@/main.js"
 
 export default {
   name: "logOut",
@@ -51,19 +52,11 @@ export default {
             setCookie("loggedIn", "false");
             window.location.href = "/staf";
           } else {
-            this.$bvToast.toast("Unknown", {
-              title: "Error",
-              autoHideDelay: 5000,
-              appendToast: true
-            });
+            this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
           }
         })
         .catch(error => {
-          this.$bvToast.toast(error + "", {
-            title: "Error",
-            autoHideDelay: 5000,
-            appendToast: true
-          });
+          this.$bvToast.toast(error + "", Vue.toastObject("Error"));
         });
     },
     editBranch(branch) {
@@ -87,11 +80,7 @@ export default {
         })
         .catch(error => {
           branch.loading = false;
-          this.$bvToast.toast(error + "", {
-            title: "Error",
-            autoHideDelay: 5000,
-            appendToast: true
-          });
+          this.$bvToast.toast(error + "",Vue.toastObject("Error"));
         });
     }
   }

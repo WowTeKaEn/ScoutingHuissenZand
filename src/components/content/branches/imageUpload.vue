@@ -7,14 +7,16 @@
         accept="image/*"
         @input="setPreview"
         id="file-default"
+        multiple
       ></b-form-file>
-      <div v-if="image" class="my-3 d-flex justify-content-center">
+      <div v-if="images" class="my-3 d-flex justify-content-center">
         <div class="w-50">
+         <span class="img-text" v-if="amount > 1"> {{ amount }}</span>
           <b-img class="img-upload" fluid-grow :src="imageUrl" alt="null"></b-img>
         </div>
       </div>
-      <div v-if="image" class="mt-3 d-flex w-100">
-        <b-button @click="saveImage" class="mx-auto mb-3" variant="primary">Opslaan</b-button>
+      <div v-if="images" class="mt-3 d-flex w-100">
+        <b-button @click="saveImages" class="mx-auto mb-3" variant="primary">Opslaan</b-button>
       </div>
     </b-overlay>
     <b-progress v-if="uploading"  height="2px"  :value="progress" :max="120"></b-progress>
@@ -38,22 +40,25 @@
 
 <script>
 import axios from "@/plugins/axios.js";
+import Vue from "@/main.js"
 
 export default {
   name: "imageUpload",
-  props: ["branchName"],
+  props: ["album","index"],
   data() {
     return {
-      image: null,
+      images: null,
       uploading: false,
-      progress: 0
+      progress: 0,
+      amount: 0
     };
   },
   methods: {
-    setPreview(file) {
-      this.image = file;
+    setPreview(files) {
+      this.images = files;
+      this.amount = files.length
     },
-    saveImage() {
+    saveImages() {
       var temp = this;
       const config = {
         onUploadProgress: function(progressEvent) {
@@ -64,8 +69,10 @@ export default {
       };
       this.uploading = true;
       var formData = new FormData();
-      formData.append("file", this.image);
-      formData.append("branchName", this.branchName);
+      formData.append("albumId", this.album.id);
+      for(let i = 0; i < this.images.length; i++){
+        formData.append(`files[${i}]`,this.images[i])
+      }
 
       axios
         .post("/branch/photo/upload", formData, config)
@@ -73,39 +80,40 @@ export default {
           this.uploading = false;
           this.progress = 0;
           if (response.status == 201) {
-            console.log(response.data);
-            this.$emit("saveImage", response.data.url);
+            this.$emit("saveImages", response.data,this.index);
           } else {
-            this.$bvToast.toast("Unknown", {
-              title: "Error",
-              autoHideDelay: 1000,
-              appendToast: true
-            });
+            this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
           }
         })
         .catch(error => {
           this.progress = 0;
           this.uploading = false;
           if (error.response.status === 401) {
-            this.$bvToast.toast("Unauthorised", {
-              title: "Error",
-              autoHideDelay: 1000,
-              appendToast: true
-            });
+            this.$bvToast.toast("Afbeeldingen zijn samen te groot selecteer minder of kleinere afbeeldingen", Vue.toastObject("Error"));
           } else {
-            this.$bvToast.toast(error + "", {
-              title: "Error",
-              autoHideDelay: 1000,
-              appendToast: true
-            });
+            this.$bvToast.toast(error + "", Vue.toastObject("Error"));
           }
         });
     }
   },
   computed: {
     imageUrl() {
-      return URL.createObjectURL(this.image);
+      return URL.createObjectURL(this.images[0]);
     }
   }
 };
 </script>
+
+
+<style>
+
+.img-text{
+  position: absolute;
+  z-index: 1000;
+    top: 42%;
+    left: 48.7%;
+  color: white;
+  font-size: 2rem;
+}
+  
+</style>

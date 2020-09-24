@@ -51,6 +51,8 @@
 
 <script>
 import axios from "@/plugins/axios.js";
+import Vue from "@/main.js"
+
 
 export default {
   name: "assignBranch",
@@ -95,49 +97,25 @@ export default {
                 }
               }
               if(response.status == 201){
-                this.$bvToast.toast("Tak verwijderd, Maar mail account moet handmatig worden aangepast", {
-                title: "Succes",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+                this.$bvToast.toast("Tak verwijderd, Maar mail account moet handmatig worden aangepast", Vue.toastObject("Succes"));
               }else{
-                this.$bvToast.toast("Tak verwijderd", {
-                title: "Succes",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+                this.$bvToast.toast("Tak verwijderd", Vue.toastObject("Succes"));
               }
               
             } else {
-              this.$bvToast.toast("Unknown", {
-                title: "Error",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+              this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
             }
           })
           .catch(error => {
             this.deleting = false;
             if (error.response.status === 401) {
-              this.$bvToast.toast("Unauthorised", {
-                title: "Error",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+              this.$bvToast.toast("Unauthorised", Vue.toastObject("Error"));
             } else {
-              this.$bvToast.toast(error + "", {
-                title: "Error",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+              this.$bvToast.toast(error + "", Vue.toastObject("Error"));
             }
           });
       } else {
-        this.$bvToast.toast("Vul alle velden in.", {
-          title: "Error",
-          autoHideDelay: 5000,
-          appendToast: true
-        });
+        this.$bvToast.toast("Vul alle velden in.", Vue.toastObject("Error"));
       }
     },
     attemptToSubmit() {
@@ -156,17 +134,9 @@ export default {
                 branchAdmin: this.getWho
               });
               if(response.status == 206){
-                this.$bvToast.toast("Tak toegevoegd, Maar mail account moet handmatig worden aangepast", {
-                title: "Succes",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+                this.$bvToast.toast("Tak toegevoegd, Maar mail account moet handmatig worden aangepast", Vue.toastObject("Succes"));
               }else{
-                this.$bvToast.toast("Tak toegevoegd", {
-                title: "Succes",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+                this.$bvToast.toast("Tak toegevoegd", Vue.toastObject("Succes"));
               }
             } else if (response.status == 200 || response.status == 202) {
               for (var i = 0; i < this.branches.length; i++) {
@@ -176,56 +146,27 @@ export default {
               }
               if (response.status == 202) {
                 this.$bvToast.toast(
-                  "Bestaande tak aangepast, Maar mail account moet handmatig worden aangepast of probeer het opnieuw.",
-                  {
-                    title: "Succes",
-                    autoHideDelay: 5000,
-                    appendToast: true
-                  }
+                  "Bestaande tak aangepast, Maar mail account moet handmatig worden aangepast of probeer het opnieuw.",Vue.toastObject("Succes")
                 );
               } else {
-                this.$bvToast.toast("Bestaande tak aangepast", {
-                  title: "Succes",
-                  autoHideDelay: 5000,
-                  appendToast: true
-                });
+                this.$bvToast.toast("Bestaande tak aangepast", Vue.toastObject("Succes"));
               }
             } else {
-              this.$bvToast.toast("Unknown", {
-                title: "Error",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+              this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
             }
           })
           .catch(error => {
             this.submitting = false;
             if (error.response.status === 405) {
-              this.$bvToast.toast("Unauthorized: OAuth Token possibilly expired. Neem contact op met de admin of stel handmatig de email accounts in", {
-                title: "Error",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+              this.$bvToast.toast("Unauthorized: OAuth Token possibilly expired. Neem contact op met de admin of stel handmatig de email accounts in", Vue.toastObject("Error"));
             } else if (error.response.status == 400) {
-              this.$bvToast.toast("Tak niet toegevoegd", {
-                title: "Error",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+              this.$bvToast.toast("Tak niet toegevoegd", Vue.toastObject("Error"));
             } else {
-              this.$bvToast.toast(error + "", {
-                title: "Error",
-                autoHideDelay: 5000,
-                appendToast: true
-              });
+              this.$bvToast.toast(error + "", Vue.toastObject("Error"));
             }
           });
       } else {
-        this.$bvToast.toast("Vul alle velden in.", {
-          title: "Error",
-          autoHideDelay: 5000,
-          appendToast: true
-        });
+        this.$bvToast.toast("Vul alle velden in.", Vue.toastObject("Error"));
       }
     }
   }

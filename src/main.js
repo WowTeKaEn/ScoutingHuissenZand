@@ -3,9 +3,7 @@ import './plugins/axios';
 import App from './App.vue';
 import router from './router';
 import LoadScript from 'vue-plugin-load-script';
-import VueGallery from 'vue-gallery'
-
-
+import VuePreview from 'vue-preview'
 
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
@@ -15,15 +13,25 @@ require('@/assets/css/all.min.css');
 
 
 
+Vue.mixin({
+  methods: {
+    toastObject: str => {
+      return {
+        title: str,
+      autoHideDelay: 5000,
+      appendToast: true
+      }
+    }
+  }
+})
 
-
-Vue.component('VGallery', VueGallery)
+Vue.use(VuePreview)
+Vue.use(LoadScript);
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
-Vue.use(LoadScript);
 Vue.config.productionTip = false;
 
-new Vue({
+export default new Vue({
   router,
   render: h => h(App)
 }).$mount('#app');

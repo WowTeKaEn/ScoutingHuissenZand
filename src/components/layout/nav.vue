@@ -59,6 +59,10 @@
   background-color: #3636361e;
 }
 
+.nav-link{
+  color:#28a745 !important;
+}
+
 
 .nav-collapse-btn {
   margin: auto auto;

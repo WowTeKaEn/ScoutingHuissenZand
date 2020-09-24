@@ -34,7 +34,9 @@
 import { VueEditor } from "vue2-editor";
 import ImageResize from "quill-image-resize";
 import axios from "@/plugins/axios.js";
+import Vue from "@/main.js"
 
+ 
 export default {
   name: "editor",
   components: { VueEditor },
@@ -44,7 +46,7 @@ export default {
       customModulesForEditor: [{ alias: "imageResize", module: ImageResize }],
       editorSettings: {
         modules: {
-          imageResize: { modules: ["Resize", "DisplaySize"] }
+          imageResize: { modules: ["Resize", "DisplaySize"] },
         }
       },
       disabled: false,
@@ -84,11 +86,7 @@ export default {
         })
         .catch(err => {
           this.disabled = false;
-          this.$bvToast.toast(err + "", {
-            title: "Error",
-            autoHideDelay: 5000,
-            appendToast: true
-          });
+          this.$bvToast.toast(err + "", Vue.toastObject("Error"));
         });
     },
     handleImageRemoved(file) {
