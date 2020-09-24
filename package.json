@@ -5,6 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve --mode development",
     "build": "vue-cli-service build --mode production",
+    "publish": "vue-cli-service build --mode production && git add . && git commit -m",
+    "postpublish":"git push",
     "lint": "vue-cli-service lint",
     "stage": "vue-cli-service build --mode development"
   },
