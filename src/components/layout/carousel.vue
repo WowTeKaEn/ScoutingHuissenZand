@@ -30,7 +30,7 @@
     </div>
         <div class="carousel-cell clean-block clean-hero">
       <div class="text carousel-text">
-        <h3>Rowans!</h3>
+        <h3>Rowans</h3>
       </div>
       <img
           style="object-fit: cover;"
