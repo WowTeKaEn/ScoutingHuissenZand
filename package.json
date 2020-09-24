@@ -7,6 +7,7 @@
     "build": "vue-cli-service build --mode production",
     "publish": "vue-cli-service build --mode production && git add . && git commit -m",
     "postpublish":"git push",
+    "nocommentpublish": "vue-cli-service build --mode production && git add . && git commit -m 'publish' && git push",
     "lint": "vue-cli-service lint",
     "stage": "vue-cli-service build --mode development"
   },
