@@ -27,7 +27,7 @@ RewriteRule "\.js\.gz$" "-" [T=text/javascript,E=no-gzip:1]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_URI}  !(api) [NC]
-RewriteRule ^(.*)$ /index.php [NC,L,QSA]
+RewriteRule ^(.*)$ /dist/index.php [NC,L,QSA]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^api/(.*)$ /api/index.php?path=$1 [NC,L,QSA]
