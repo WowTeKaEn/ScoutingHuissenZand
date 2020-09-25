@@ -133,7 +133,6 @@ export default {
     checkImageAmount() {
       if (this.currentAlbum != null && this.branch.albums[this.currentAlbum] != null) {
         let images = this.branch.albums[this.currentAlbum].images.length;
-        console.log(images)
         if (images > 5) {
           this.style.innerHTML = `.my-gallery  :nth-child(4) a:after {content: '${
             images - 5
@@ -156,7 +155,6 @@ export default {
             bottom: 0;
           }`;
         }else{
-          console.log("hey")
           this.style.innerHTML = "";
         }
         if (images > 4) {
