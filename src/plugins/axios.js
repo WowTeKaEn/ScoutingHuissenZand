@@ -9,8 +9,7 @@ import axios from "axios";
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 let config = {
-  // baseURL: process.env.VUE_APP_ROOT_API,
-  baseURL: window.location.protocol + "//" + window.location.hostname + "/api",
+  baseURL: process.env.VUE_APP_ROOT_API,
   timeout: 60 * 1000, // Timeout
   withCredentials: true, // Check cross-site Access-Control
 };

@@ -1,6 +1,6 @@
-
 RewriteEngine on
-
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
 RewriteCond %{REQUEST_URI}  !(api) [NC]
 RewriteRule ^(.*)$ /dist/$1 [NC,L,QSA]
