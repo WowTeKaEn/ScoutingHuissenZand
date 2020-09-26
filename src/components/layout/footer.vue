@@ -20,12 +20,13 @@
                     <h5>Support</h5>
                     <ul>
                         <li><a href="/staf">Staff login</a></li>
+                        <li><a href="/creator">Maker</a></li>
                     </ul>
                 </div>
             </div>
         </b-container>
         <div class="footer-copyright">
-            <p>© 2020 Copyright</p>
+            <p>© 2020 Copyright made by <a style="color:#28a745" href="/creator">Wout Knuiman</a></p>
         </div>
     </footer>
 </template>

@@ -15,7 +15,7 @@
 /* Import the Quill styles you want */
  @import "~quill/dist/quill.core.css";
 
-.clean-card p{
+.clean-card .ql-editor p{
 opacity: 1!important;
 }
 
