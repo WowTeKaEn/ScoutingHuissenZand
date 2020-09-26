@@ -21,7 +21,7 @@
       <div class="section-decoration top"></div>
     </section>
 
-    <section class="clean-block clean-info p-0 py-5">
+    <section class="clean-block clean-info p-0 py-5" style="position:relative">
       
       <b-container>
         <div class="block-heading p-0">
@@ -30,6 +30,20 @@
         </div>
         <h2>Kalender</h2>
         <calendarViewer v-bind:ready="calendarReturned" v-bind:events="events"></calendarViewer>
+      </b-container>
+      <div style="background-color:white" class="section-decoration top"></div>
+    </section>
+    <section v-if="albums != null && albums.length > 0" class="p-0 py-5 photo-block">
+      
+      <b-container class="py-5">
+        
+        <b-card class="my-5 clean-block clean-info clean-card pb-5">
+          <div class="block-heading p-0">
+          <h2 class="text-info">Foto's</h2>
+          <p style="font-size:1em">Hier staan een aantal foto's van de verschillende speltakken</p>
+        </div>
+        <albumViewer :albums="albums"></albumViewer>
+        </b-card>
       </b-container>
     </section>
 </div>
@@ -40,16 +54,18 @@ import axios from "@/plugins/axios.js";
 import teammember from "@/components/teammember.vue";
 import carousel from "@/components/layout/carousel.vue";
 import calendarViewer from "@/components/content/events/calendarViewer";
+import albumViewer from "@/components/content/albumViewer";
 import Vue from "@/main.js"
  
 export default {
   name: "Home",
   props: ["tabs", "branches"],
-  components: { teammember, carousel, calendarViewer },
+  components: { teammember, carousel, calendarViewer, albumViewer },
   data() {
     return {
       calendarReturned: false,
-      events: []
+      events: [],
+      albums: null
     };
   },
   methods: {
@@ -86,20 +102,26 @@ export default {
           this.$bvToast.toast("Kalender kon niet worden opgehaald", Vue.toastObject("Error"));
         }
       });
+    axios
+    .get("albums/get")
+    .then(response => {
+      this.albums = response.data;
+    });
   },
 };
 </script>
 
 <style>
 .section-decoration {
+    background-color: #f6f6f6;
     background-position: center top;
     height: 20px;
     width: 100%;
       position: absolute;
     left: 0;
     z-index: 2;
-    background-image: url(~@/assets/img/section-border.svg);
-    fill: #f6f6f6;
+    mask: url(~@/assets/img/section-border.svg);
+    -webkit-mask: url(~@/assets/img/section-border.svg);
   }
   .section-decoration.top{
     bottom: -20px;
@@ -117,5 +139,10 @@ export default {
   .clean-hero {
     color: #28a745;
   }
+
+.photo-block{
+  background-attachment: fixed;
+  background-image: url(~@/assets/img/20190725_083553.jpg);
+}
 
 </style>

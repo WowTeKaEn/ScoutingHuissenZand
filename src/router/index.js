@@ -71,6 +71,12 @@ const routes = [
     props: true,
     meta: {title: route => {return "Inschrijven voor " + route.params.branchName + titleAppend }} 
   },
+  {
+    path: "/creator",
+    component: () => import("../views/creator.vue"),
+    props: true,
+    meta: {title: () => {return "Gemaakt door " + titleAppend }} 
+  },
   { path: "/error/:error",
    component: NotFound,
    props: true,
