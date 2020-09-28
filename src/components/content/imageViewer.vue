@@ -1,6 +1,7 @@
-<template>
-  <vue-preview :slides="images"></vue-preview>
+<template >
+  <vue-preview class="d-flex flex-column align-items-center" :slides="images"></vue-preview>
 </template>
+
 
 <script>
 export default {
@@ -32,7 +33,8 @@ export default {
           right: 0;
           bottom: 0;
           text-align: center;
-          vertical-align: middle;
+          transform: translate(0, 50%);
+          line-height: 0;
           }
           .my-gallery  :nth-child(4) a:before {
             content: "";
@@ -108,7 +110,7 @@ export default {
 
 .my-gallery figure {
   align-items: center;
-  width: 80%;
+  // max-width: 80%;
 
   margin: 0;
 
@@ -116,6 +118,7 @@ export default {
 }
 
 .my-gallery {
+  max-width: 800px;
   @extend .grid;
   @extend .square;
   @extend .column-2;
@@ -128,18 +131,13 @@ export default {
 
 .my-gallery :nth-child(1) {
   @extend .row-3;
-  margin-left: auto;
-}
-
-.my-gallery :nth-child(5) {
-  margin-left: auto;
-  img {
-    height: 20vh;
+  img{
+    max-height: 50.3vh;
   }
 }
 
-.my-gallery :nth-child(3) img {
-  max-height: 20vh;
+.my-gallery :nth-child(n + 2) img{
+  max-height: 25vh;
 }
 
 .my-gallery :nth-child(4) a {

@@ -56,12 +56,12 @@ export default {
   },
   mounted(){
     if(isMobile()){
-      document.getElementsByClassName("page")[0].classList.add("small-nav");
+      document.getElementsByClassName("page")[0].classList.add("small-page");
     }
   },
   computed:{
     containsPage(){
-      return this.$route.path == "/index" || this.$route.path == "/" ? "page small-nav" : "page";
+      return this.$route.path == "/index" || this.$route.path == "/" ? "page small-page" : "page";
     }
   }
 };
@@ -80,7 +80,7 @@ main.page {
   }
 }
 
-main.page.small-nav {
+main.page.small-page {
   padding-top: 96px !important;
 }
 
@@ -95,7 +95,6 @@ main.page.small-nav {
 html, body {
   min-height: 100vh;
   max-width: 100%;
-  overflow-x: hidden;
   display: flex;
   flex-direction: column;
 }

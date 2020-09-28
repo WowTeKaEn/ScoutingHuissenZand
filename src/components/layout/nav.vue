@@ -146,19 +146,8 @@ export default {
       if (!isMobile()) {
         this.$refs.dropdown.visible = false;
       }
-    }
-  },
-  mounted() {
-    if(!isMobile()){
-      window.onscroll = function() {
-      scrollFunction();
-      };
-      document.getElementById("navbar").classList.add("transition");
-      document.querySelector('.navbar .navbar-brand').classList.add("transition");
-    }else{
-      document.getElementById("navbar").classList.add("small-nav");
-    }
-    function scrollFunction() {
+    },
+    scrollFunction() {
       if (
         document.body.scrollTop > 10 ||
         document.documentElement.scrollTop > 10
@@ -167,6 +156,15 @@ export default {
       } else {
         document.getElementById("navbar").classList.remove("small-nav");
       }
+    }
+  },
+  mounted() {
+    if(!isMobile()){
+      window.onscroll = this.scrollFunction
+      document.getElementById("navbar").classList.add("transition");
+      document.querySelector('.navbar .navbar-brand').classList.add("transition");
+    }else{
+      document.getElementById("navbar").classList.add("small-nav");
     }
   }
 };

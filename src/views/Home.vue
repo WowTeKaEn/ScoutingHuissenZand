@@ -37,7 +37,7 @@
       
       <b-container class="py-5">
         
-        <b-card class="my-5 clean-block clean-info clean-card pb-5">
+        <b-card class="my-5 clean-block clean-card pb-5">
           <div class="block-heading p-0">
           <h2 class="text-info">Foto's</h2>
           <p style="font-size:1em">Hier staan een aantal foto's van de verschillende speltakken</p>
