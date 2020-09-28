@@ -54,14 +54,9 @@ export default {
         });
     }
   },
-  mounted(){
-    if(isMobile()){
-      document.getElementsByClassName("page")[0].classList.add("small-page");
-    }
-  },
   computed:{
     containsPage(){
-      return this.$route.path == "/index" || this.$route.path == "/" ? "page small-page" : "page";
+      return this.$route.path == "/index" || this.$route.path == "/" || isMobile() ? "page small-page" : "page";
     }
   }
 };
