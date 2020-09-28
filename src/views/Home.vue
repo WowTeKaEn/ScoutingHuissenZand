@@ -21,18 +21,6 @@
       <div class="section-decoration top"></div>
     </section>
 
-    <section class="clean-block clean-info p-0 py-5" style="position:relative">
-      
-      <b-container>
-        <div class="block-heading p-0">
-          <h2 class="text-info">Evenementen</h2>
-          <p>Deze kalender bevat alle aankomende evenementen van de scouting</p>
-        </div>
-        <h2>Kalender</h2>
-        <calendarViewer v-bind:ready="calendarReturned" v-bind:events="events"></calendarViewer>
-      </b-container>
-      <div style="background-color:white" class="section-decoration top"></div>
-    </section>
     <section v-if="albums != null && albums.length > 0" class="p-0 py-5 photo-block">
       
       <b-container class="py-5">
@@ -45,6 +33,19 @@
         <albumViewer :albums="albums"></albumViewer>
         </b-card>
       </b-container>
+      
+    </section>
+    <section class="clean-block clean-info p-0 py-5" style="position:relative">
+      <div style="background-color:white" class="section-decoration bottom"></div>
+      <b-container>
+        <div class="block-heading p-0">
+          <h2 class="text-info">Evenementen</h2>
+          <p>Deze kalender bevat alle aankomende evenementen van de scouting</p>
+        </div>
+        <h2>Kalender</h2>
+        <calendarViewer v-bind:ready="calendarReturned" v-bind:events="events"></calendarViewer>
+      </b-container>
+      
     </section>
 </div>
 </template>
