@@ -23,6 +23,9 @@
     <b-collapse id="nav-collapse" is-nav class="w-75 ml-auto">
       <b-navbar-nav class="ml-auto">
         <b-nav-item
+          href="/index"
+        >Home</b-nav-item>
+        <b-nav-item
           v-for="tab in $props.tabs"
           :key="tab.tabName"
           :href="'/tab/' + tab.tabName"
