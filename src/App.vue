@@ -116,6 +116,11 @@ main section:first-of-type{
 .flex-fill.dark{
   background-color: #f6f6f6;
 }
+
+
+.custom-file label{
+  overflow-y: hidden;
+}
 </style>
 
 
