@@ -38,7 +38,7 @@
 import axios from "@/plugins/axios.js";
 import setCookie from "@/plugins/setCookie.js";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
-import Vue from "@/main.js"
+import VueMixin from "@/main.js"
 
 export default {
   name: "logOut",
@@ -48,15 +48,13 @@ export default {
       axios
         .post("/user/logout")
         .then(response => {
-          if (response.status === 201) {
-            setCookie("loggedIn", "false");
+          VueMixin.throwResponse(response, null, () => {
+           setCookie("loggedIn", "false");
             window.location.href = "/staf";
-          } else {
-            this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
-          }
+          });
         })
         .catch(error => {
-          this.$bvToast.toast(error + "", Vue.toastObject("Error"));
+          VueMixin.throwError(error);
         });
     },
     editBranch(branch) {
@@ -64,10 +62,8 @@ export default {
       axios
         .post("/branch/get",{branchName: branch.branchName})
         .then(response => {
-          branch.loading = false;
-          this.returned = true;
-          if (response.status === 201) {
-            if (response.data.branchDescription == null) {
+          VueMixin.throwResponse(response, null, () => {
+           if (response.data.branchDescription == null) {
               response.data.branchDescription = "";
             }
             var converter = new QuillDeltaToHtmlConverter(
@@ -76,11 +72,14 @@ export default {
           );
           response.data.branchDescription = converter.convert();
             this.$emit("editBranch", response.data);
-          }
+          });
+          branch.loading = false;
+          this.returned = true;
         })
         .catch(error => {
-          branch.loading = false;
-          this.$bvToast.toast(error + "",Vue.toastObject("Error"));
+          VueMixin.throwError(error,()=>{
+            branch.loading = false;
+          });
         });
     }
   }

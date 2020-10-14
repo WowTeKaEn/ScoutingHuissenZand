@@ -1,7 +1,6 @@
 <template>
   <div>
     <FullCalendar
-      v-if="ready"
       defaultView="dayGridMonth"
       :events="events"
       :locale="nlLocale"
@@ -13,11 +12,6 @@
       :views="views"
       :height="height"
     />
-    <div v-else class="d-flex justify-content-center">
-      <span class="my-auto">
-        <b-spinner variant="primary" label="Spinning"></b-spinner>
-      </span>
-    </div>
 
     <b-sidebar v-model="sideBarEvent" id="sidebar-right" :title="sidebarTitle" right shadow>
       <div class="w-100 d-flex">
@@ -74,7 +68,7 @@ import quillViewer from "@/components/content/editor/quillViewer";
 
 export default {
   name: "calendarViewer",
-  props: ["ready", "events"],
+  props: ["events"],
   components: { FullCalendar, quillViewer },
   data() {
     return {

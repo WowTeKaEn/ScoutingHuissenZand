@@ -44,7 +44,7 @@
 
 <script>
 import axios from "@/plugins/axios.js";
-import Vue from "@/main.js"
+import VueMixin from "@/main.js"
  
 export default {
   name: "loginForm",
@@ -106,17 +106,17 @@ export default {
                 window.location.href = "/" + this.what + "/" + this.who;
               }
             } else {
-              this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
+              this.$bvToast.toast("Unknown", VueMixin.toastObject("Error"));
             }
           })
           .catch(error => {
             this.submitting = false;
             if (error.response.status === 401) {
-              this.$bvToast.toast("Email of wachtwoord klopt niet", Vue.toastObject("Error"));
+              this.$bvToast.toast("Email of wachtwoord klopt niet", VueMixin.toastObject("Error"));
             } else if (error.response.status === 403) {
-              this.$bvToast.toast("Account nog niet geverifieerd", Vue.toastObject("Error"));
+              this.$bvToast.toast("Account nog niet geverifieerd", VueMixin.toastObject("Error"));
             } else {
-              this.$bvToast.toast(error + "", Vue.toastObject("Error"));
+              this.$bvToast.toast(error + "", VueMixin.toastObject("Error"));
             }
           });
       }

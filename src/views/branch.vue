@@ -25,7 +25,7 @@
         <hr class="mt-5" />
         <h2>Kalender</h2>
         <calendarViewer
-          v-bind:ready="calendarReturned"
+          v-if="calendarReturned"
           v-bind:events="events"
         ></calendarViewer>
         <div class="d-flex mt-4">

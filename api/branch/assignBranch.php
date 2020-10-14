@@ -9,7 +9,7 @@ function branch_reassign() {
     if (isset($_POST["branchName"]) && isset($_POST["branchAdmin"])) {
         if (isset($_SESSION['user']) && $_SESSION["user"]["admin"]) {
             try {
-                $pdoResult = db::getInstance()->preparedInsert("update `branch` set branchAdmin = ? where branchName = ?", [$_POST["branchAdmin"], $_POST["branchName"]]);
+                $pdoResult = db::getInstance()->preparedInsert("UPDATE `branch` set branchAdmin = ? where branchName = ?", [$_POST["branchAdmin"], $_POST["branchName"]]);
                 if(update_user($_POST["branchName"], false, $_POST["branchAdmin"])){
                     http_response_code(200);
                 }else{
