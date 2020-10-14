@@ -27,11 +27,13 @@ function sendMessageToAdmin($data){
 }
 
 function sendMessageToRecipient($data, $token){
+    $link = $_SERVER["HTTP_HOST"]."/validate/".$data['email']."/".$token;
     $content = "
     U heeft een account aangemaakt op de scouting website.<br/>
-    Klik <a href='".$_SERVER["HTTP_HOST"]."/validate/".$data['email']."/".$token."'>hier<a/> om uw account te valideren<br/>
+    Klik <a href='".$link."'>hier<a/> om uw account te valideren<br/>
     <br/>
-    ".$_SERVER["HTTP_HOST"]."/validate/".$data['email']."/".$token."
+    Als u niet op de link kan klikken kunt u deze url kopieren en in de browser plakken:<br/>
+    <a href='".$link."'>".$link."<a/>
     Zodra uw account geverifieerd is wordt er een mail gestuurd naar de administrator.";
 
 

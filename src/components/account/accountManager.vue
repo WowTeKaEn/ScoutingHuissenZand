@@ -38,9 +38,15 @@
               class="w-100"
               size="sm"
               variant="danger"
-            >Verwijder</b-button>
-            <div v-else v-b-popover.hover="'Dit account is gekoppeld aan een speltak'">
-              <b-button disabled class="w-100" size="sm" variant="danger">Verwijder</b-button>
+              >Verwijder</b-button
+            >
+            <div
+              v-else
+              v-b-popover.hover="'Dit account is gekoppeld aan een speltak'"
+            >
+              <b-button disabled class="w-100" size="sm" variant="danger"
+                >Verwijder</b-button
+              >
             </div>
           </td>
         </tr>
@@ -78,8 +84,7 @@
 
 <script>
 import axios from "@/plugins/axios.js";
-import Vue from "@/main.js"
-
+import VueMixin from "@/main.js";
 
 export default {
   name: "accountManager",
@@ -96,14 +101,12 @@ export default {
           email: user.email,
         })
         .then((response) => {
-          if (response.status == 200) {
+          VueMixin.throwResponse(response, null, () => {
             this.users = this.users.filter((u) => u.email !== user.email);
-          } else {
-            this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
-          }
+          });
         })
         .catch((error) => {
-          this.$bvToast.toast(error + "", Vue.toastObject("Error"));
+          VueMixin.throwError(error);
         });
     },
     updateActivated(user) {
@@ -112,14 +115,14 @@ export default {
           email: user.email,
         })
         .then((response) => {
-          if (response.status !== 200) {
-            this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
+          VueMixin.throwResponse(response, () => {
             user.validated != user.validated;
-          }
+          });
         })
         .catch((error) => {
-          user.validated != user.validated;
-          this.$bvToast.toast(error + "", Vue.toastObject("Error"));
+          VueMixin.throwError(error, () => {
+            user.validated != user.validated;
+          });
         });
     },
     updateAdmin(user) {
@@ -128,14 +131,14 @@ export default {
           email: user.email,
         })
         .then((response) => {
-          if (response.status !== 200) {
-            this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
+          VueMixin.throwResponse(response, () => {
             user.admin != user.admin;
-          }
+          });
         })
         .catch((error) => {
-          user.admin != user.admin;
-          this.$bvToast.toast(error + "", Vue.toastObject("Error"));
+          VueMixin.throwError(error, () => {
+            user.admin != user.admin;
+          });
         });
     },
   },
@@ -143,16 +146,17 @@ export default {
     axios
       .get("/user/get/all")
       .then((response) => {
-        if (response.status === 200) {
-          this.users = response.data;
-          this.returned = true;
-        } else {
-          this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
-        }
+        VueMixin.throwResponse(
+          response,
+          () => (this.returned = true),
+          () => {
+            this.users = response.data;
+            this.returned = true;
+          }
+        );
       })
       .catch((error) => {
-        this.returned = true;
-        this.$bvToast.toast(error + "", Vue.toastObject("Error"));
+        VueMixin.throwError(error, () => (this.returned = true));
       });
   },
 };
