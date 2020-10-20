@@ -31,7 +31,7 @@ export default {
   },
   created() {
     axios
-      .post("/user/validate", { email: this.who, token: this.token })
+      .put("/user/validate/" + this.who + "/" + this.token)
       .then((response) => {
         this.returned = true;
         if (response.status === 200) {
@@ -44,11 +44,7 @@ export default {
       .catch((error) => {
         this.validated = false;
         this.returned = true;
-        if (error.response.status === 409) {
-          this.$bvToast.toast("Account al gevalideerd", Vue.toastObject("Melding"));
-        } else {
-          this.$bvToast.toast(error + "", Vue.toastObject("Error"));
-        }
+        this.$bvToast.toast(error + "", Vue.toastObject("Error"));
       });
   },
 };

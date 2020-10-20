@@ -23,7 +23,7 @@ Vue.mixin({
       }
     },
     throwResponse(response,call,callElse){
-        if (response.status !== 200 && response.status !== 201) {
+        if (response.status !== 200) {
           call(response);
           this.$bvToast.toast("Unknown", this.toastObject("Error"));
         }else{
@@ -36,7 +36,7 @@ Vue.mixin({
         if(call){
           call(err);
         }
-        this.$bvToast.toast(err.toString(), this.toastObject("Error"));
+        this.$bvToast.toast(err.response.data.message, this.toastObject("Error"));
   }
 
   }

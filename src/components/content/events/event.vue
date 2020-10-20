@@ -34,16 +34,15 @@ export default {
   },
   methods: {
     attemptToSubmit() {
-      if (this.eventName != null && this.$refs.editor.editDescription != null) {
+      if (this.eventName  && this.$refs.editor.editDescription ) {
         this.submitting = true;
         axios
-          .post("/event/insert", {
+          .put("/event/" + this.branch, {
             eventName: this.eventName,
             eventDescription: this.$refs.editor.getDelta(),
             startDate: this.editingEvent.start,
             endDate: this.editingEvent.end,
             visible: this.visible,
-            branchName: this.branch,
             images: this.$refs.editor.images,
             deletedImages: this.$refs.editor.deletedImages,
           })
@@ -71,18 +70,12 @@ export default {
               this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
             }
           })
-          .catch((error) => {
+          .catch(() => {
             this.submitting = false;
-            if (error.response.status === 401) {
-              this.$bvToast.toast("Unauthorised", Vue.toastObject("Error"));
-            } else if (error.response.status == 400) {
-              this.$bvToast.toast(
+            this.$bvToast.toast(
                 "Evenement niet toegevoegd",
                 Vue.toastObject("Error")
               );
-            } else {
-              this.$bvToast.toast(error + "", Vue.toastObject("Error"));
-            }
           });
       } else {
         this.$bvToast.toast("Vul alle velden in.", Vue.toastObject("Error"));
@@ -92,8 +85,8 @@ export default {
   computed: {
     getHtml() {
       if (
-        this.editingEvent != null &&
-        this.editingEvent.extendedProps.description != null
+        this.editingEvent  &&
+        this.editingEvent.extendedProps.description 
       ) {
         var converter = new QuillDeltaToHtmlConverter(
           JSON.parse(this.editingEvent.extendedProps.description),

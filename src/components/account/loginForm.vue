@@ -93,13 +93,13 @@ export default {
       if (this.passwordValidation === null && this.emailValidation === null) {
         this.submitting = true;
         axios
-          .post("/user/login", {
+          .post("/user", {
             password: this.password,
-            email: this.email
+            username: this.email
           })
           .then(response => {
             this.submitting = false;
-            if (response.status == 201) {
+            if (response.status == 200) {
               if (this.what == null && this.who == null) {
                 window.location.href = "/stafpaneel"
               } else {
@@ -111,13 +111,7 @@ export default {
           })
           .catch(error => {
             this.submitting = false;
-            if (error.response.status === 401) {
-              this.$bvToast.toast("Email of wachtwoord klopt niet", VueMixin.toastObject("Error"));
-            } else if (error.response.status === 403) {
-              this.$bvToast.toast("Account nog niet geverifieerd", VueMixin.toastObject("Error"));
-            } else {
-              this.$bvToast.toast(error + "", VueMixin.toastObject("Error"));
-            }
+            this.$bvToast.toast(error.response.data.message, VueMixin.toastObject("Error"));
           });
       }
     }

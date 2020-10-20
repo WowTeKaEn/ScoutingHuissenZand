@@ -1,5 +1,5 @@
 <template>
-  <b-card class="mb-3" v-if="tabs !== null && tabs.length !== 0">
+  <b-card class="mb-3" v-if="tabs  && tabs.length !== 0">
     <h2>Tab aanpassen</h2>
     <div v-for="tab in tabs" :key="tab.tabName" class="d-flex justify-content-between mb-2">
       <span class="my-auto">{{ tab.tabName }}</span>
@@ -37,7 +37,7 @@ export default {
     deleteTab(tab) {
       tab.loading = true;
       axios
-        .post("/tab/delete",{tabName: tab.tabName})
+        .delete("/tab/" + tab.tabName)
         .then(response => {
           tab.loading = false;
           if (response.status === 200) {
@@ -61,10 +61,10 @@ export default {
     },
     editTab(tab) {
       axios
-        .post("/tab/get",{tab: tab.tabName})
+        .get("/tab/" + tab.tabName)
         .then(response => {
           this.returned = true;
-          if (response.status === 201) {
+          if (response.status === 200) {
             var converter = new QuillDeltaToHtmlConverter(
             JSON.parse(response.data.tabDescription),
             {multiLineParagraph: false, multiLineBlockquote: false, multiLineHeader: false, multiLineCodeblock: false}

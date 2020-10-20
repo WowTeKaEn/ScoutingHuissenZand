@@ -6,7 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'BaseSendGridClientInterface' => $vendorDir . '/sendgrid/sendgrid/lib/BaseSendGridClientInterface.php',
     'Cloudinary' => $vendorDir . '/cloudinary/cloudinary_php/src/Cloudinary.php',
     'CloudinaryField' => $vendorDir . '/cloudinary/cloudinary_php/src/CloudinaryField.php',
     'Cloudinary\\Api' => $vendorDir . '/cloudinary/cloudinary_php/src/Api.php',
@@ -32,6 +31,4 @@ return array(
     'Cloudinary\\SignatureVerifier' => $vendorDir . '/cloudinary/cloudinary_php/src/SignatureVerifier.php',
     'Cloudinary\\Uploader' => $vendorDir . '/cloudinary/cloudinary_php/src/Uploader.php',
     'Cloudinary\\Utils\\Singleton' => $vendorDir . '/cloudinary/cloudinary_php/src/Utils/Singleton.php',
-    'SendGrid' => $vendorDir . '/sendgrid/sendgrid/lib/SendGrid.php',
-    'TwilioEmail' => $vendorDir . '/sendgrid/sendgrid/lib/TwilioEmail.php',
 );

@@ -69,17 +69,16 @@ export default {
       };
       this.uploading = true;
       var formData = new FormData();
-      formData.append("albumId", this.album.id);
       for(let i = 0; i < this.images.length; i++){
         formData.append(`files[${i}]`,this.images[i])
       }
 
       axios
-        .post("/branch/photo/upload", formData, config)
+        .post("/albums/" + this.album.id, formData, config)
         .then(response => {
           this.uploading = false;
           this.progress = 0;
-          if (response.status == 201) {
+          if (response.status == 200) {
             this.$emit("saveImages", response.data,this.index);
           } else {
             this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
@@ -88,11 +87,7 @@ export default {
         .catch(error => {
           this.progress = 0;
           this.uploading = false;
-          if (error.response.status === 401) {
-            this.$bvToast.toast("Afbeeldingen zijn samen te groot selecteer minder of kleinere afbeeldingen", Vue.toastObject("Error"));
-          } else {
-            this.$bvToast.toast(error + "", Vue.toastObject("Error"));
-          }
+          this.$bvToast.toast(error + "", Vue.toastObject("Error"));
         });
     }
   },
