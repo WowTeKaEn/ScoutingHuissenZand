@@ -1,6 +1,7 @@
 <template>
   <b-card class="mb-3">
     <h1>Evenementen</h1>
+    <b-input style="height:0;opacity:0;border:0" class="p-0 m-0" ref="calendarRef"></b-input>
     <b-form novalidate @submit.stop.prevent>
       <div>
         <FullCalendar
@@ -29,7 +30,7 @@
       >
         <event
           @correct-submit="closeModal"
-          v-if="currentEvent != null"
+          v-if="currentEvent "
           :key="currentEvent.title"
           ref="eventEditor"
           v-bind:event="currentEvent"
@@ -113,7 +114,7 @@ export default {
     this.currentEvent = null;
     this.events = [];
     axios
-      .post("/event/get/branch", { branchName: this.branchName })
+      .get("/event/" + this.branchName)
       .then((response) => {
         this.returnedEvents = true;
         response.data.forEach((event) => {
@@ -154,12 +155,12 @@ export default {
     },
     deleteEvent() {
       axios
-        .post("/event/delete", {
+        .delete("/event",{data: {
           eventName: this.currentEvent.title,
           branchName: this.branchName,
           startDate: this.currentEvent.start,
           endDate: this.currentEvent.end,
-        })
+        }})
         .then((response) => {
           if (response.status == 200) {
             this.events = this.events.filter(
@@ -177,11 +178,7 @@ export default {
         })
         .catch((error) => {
           this.submitting = false;
-          if (error.response.status === 401) {
-            this.$bvToast.toast("Unauthorised", Vue.toastObject("Error"));
-          } else {
-            this.$bvToast.toast(error + "", Vue.toastObject("Error"));
-          }
+          this.$bvToast.toast(error + "", Vue.toastObject("Error"));
         });
     },
     closeModal(responseCode) {
@@ -200,10 +197,12 @@ export default {
         end: arg.end,
         extendedProps: { description: "[]", visible: 0 },
       };
+      this.$refs.calendarRef.$el.focus();
       this.$bvModal.show("modal");
     },
     handleEventSelect(arg) {
       this.currentEvent = arg.event;
+      this.$refs.calendarRef.$el.focus();
       this.$bvModal.show("modal");
     },
     handleEventDateChange(arg) {
@@ -214,11 +213,10 @@ export default {
         previousEvent = arg.oldEvent;
       }
       axios
-        .post("/event/update", {
+        .put("/event/" + this.branchName + "/date", {
           eventName: arg.event.title,
           startDate: arg.event.start,
           endDate: arg.event.end,
-          branchName: this.branchName,
           prevStartDate: previousEvent.start,
           prevEndDate: previousEvent.end,
         })
@@ -241,17 +239,13 @@ export default {
         .catch((error) => {
           arg.revert();
           this.submitting = false;
-          if (error.response.status === 401) {
-            this.$bvToast.toast("Unauthorised", Vue.toastObject("Error"));
-          } else {
-            this.$bvToast.toast(error + "", Vue.toastObject("Error"));
-          }
+          this.$bvToast.toast(error + "", Vue.toastObject("Error"));
         });
     },
   },
   computed: {
     newEvent() {
-      if (this.currentEvent != null && this.currentEvent.title != null) {
+      if (this.currentEvent && this.currentEvent.title) {
         return false;
       }
       return true;

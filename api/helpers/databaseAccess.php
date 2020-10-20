@@ -22,7 +22,7 @@ class db {
     function executeQuery($query){
         try {
             $prepare = $this->pdo->query(strip_tags($query));
-            return $prepare->fetchAll();
+            return $prepare->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
             http_response_code(500);
             die(print_r($e->getMessage()));
@@ -36,7 +36,7 @@ class db {
                 $stmt->bindValue($execution + 1, strip_tags($key));
             }
             $stmt->execute();
-            return $stmt->fetchAll();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
             http_response_code(500);
             die(print_r($e->getMessage()));
@@ -60,5 +60,7 @@ class db {
         }
     }
 }
+
+return db::getInstance();
 
 ?>

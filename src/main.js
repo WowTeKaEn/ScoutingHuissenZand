@@ -21,7 +21,24 @@ Vue.mixin({
       autoHideDelay: 5000,
       appendToast: true
       }
-    }
+    },
+    throwResponse(response,call,callElse){
+        if (response.status !== 200) {
+          call(response);
+          this.$bvToast.toast("Unknown", this.toastObject("Error"));
+        }else{
+          if(callElse){
+            callElse(response)
+          }
+        }
+    },
+    throwError(err,call){
+        if(call){
+          call(err);
+        }
+        this.$bvToast.toast(err.response.data.message, this.toastObject("Error"));
+  }
+
   }
 })
 

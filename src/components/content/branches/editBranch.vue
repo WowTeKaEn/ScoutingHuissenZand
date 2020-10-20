@@ -52,8 +52,7 @@ export default {
         this.branch.facebookUsername = ""
       }
       axios
-        .post("/branch/update", {
-          branchName: this.branch.branchName,
+        .put("/branch/" + this.branch.branchName, {
           branchDescription: this.$refs.editor.getDelta(),
           instaUsername: this.branch.instaUsername,
           facebookUsername: this.branch.facebookUsername,
@@ -65,19 +64,17 @@ export default {
           this.submitting = false;
           if (response.status == 200) {
             this.$bvToast.toast("Bestaande speltak aangepast", Vue.toastObject("Succes"));
-          } else {
+          } else if(response.status == 201){
+            this.$bvToast.toast("Speltak aangemaakt", Vue.toastObject("Succes"));
+
+          }else{
             this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
           }
+          
         })
         .catch(error => {
           this.submitting = false;
-          if (error.response.status === 401) {
-            this.$bvToast.toast("Ongemachtigd", Vue.toastObject("Error"));
-          } else if (error.response.status == 403) {
-            this.$bvToast.toast("Tak niet aangepast", Vue.toastObject("Error"));
-          } else {
-            this.$bvToast.toast(error + "", Vue.toastObject("Error"));
-          }
+          this.$bvToast.toast(error + "", Vue.toastObject("Error"));
         });
     }
   }

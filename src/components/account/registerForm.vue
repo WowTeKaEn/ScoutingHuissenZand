@@ -115,21 +115,15 @@ export default {
         axios
           .post("user/signup", { 
             password: this.password,
-            email: this.email
+            username: this.email
           })
           .then(response => {
             this.submitting = false;
-            if (response.status === 201) {
-              this.$bvToast.toast("Account aangemaakt. Er is een email verstuurd naar uw email voor validatie (dit kan 10 minuten duren)", Vue.toastObject("Succes"));
-            }
+            this.$bvToast.toast(response.data.message, Vue.toastObject("Succes"));
           })
           .catch(error => {
             this.submitting = false;
-            if(error.response.status === 409){
-              this.$bvToast.toast("Email bestaat al", Vue.toastObject("Error"));
-            }else{
-                this.$bvToast.toast(error + '', Vue.toastObject("Error"));
-            }     
+            this.$bvToast.toast(error.response.data.message, Vue.toastObject("Error"));   
           });
       }
     }

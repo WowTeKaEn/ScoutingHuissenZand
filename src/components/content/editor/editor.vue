@@ -74,7 +74,7 @@ export default {
       formData.append("file", file);
       this.disabled = true;
       axios
-        .post("/images/insert", formData, config)
+        .post("/images", formData, config)
         .then(result => {
           this.progress = 0;
           this.disabled = false;
@@ -90,12 +90,16 @@ export default {
         });
     },
     handleImageRemoved(file) {
-      if (this.description != null) {
+      if (this.description ) {
         this.deletedImages.push(file);
       } else {
         console.log("handling image deletion");
         axios
-          .post("/images/remove" + file)
+          .delete("/images",{
+            data:{
+              image: file
+            }
+          })
           .then(() => {
             console.log("handled image deletion");
           })

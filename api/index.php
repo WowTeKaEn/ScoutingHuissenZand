@@ -1,85 +1,111 @@
 <?php
 
-header("Access-Control-Allow-Origin: ".$_SERVER['HTTP_ORIGIN'] );
+
+
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Json;
+use Symfony\Component\Debug\ErrorHandler;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+
+
+require_once __DIR__.'/vendor/autoload.php';
+require __DIR__.'/helpers/env.php';
+require __DIR__.'/helpers/middleware.php';
+require_once __DIR__."/helpers/databaseaccess.php";
+
+session_start();
+\Cloudinary::config(array(
+    "cloud_name" => $_ENV["CLOUDINARY_CLOUD_NAME"],
+    "api_key"    => $_ENV["CLOUDINARY_API_KEY"],
+    "api_secret" => $_ENV["CLOUDINARY_API_SECRET"],
+    "secure"     => true,
+));
+$db = db::getInstance();
+
+require_once __DIR__.'/helpers/functions.php';
+
+
+$app = new Silex\Application();
+
+
+
+
+
+$app->get('/info', function (Request $request) use ($db, $loggedIn, $app) {
+    $res;
+    $sql = "SELECT branchName, branchAdmin, instaUsername, facebookUsername FROM `branch`";
+    try {
+        call_user_func($loggedIn, $request, $app);
+    } catch (\Exception $th) {
+        $sql .= "where visible = 1";
+    }
+    $res["branches"] = $db->executeQuery($sql);
+    $res["tabs"] = $db->executeQuery("SELECT tabName FROM `tabs`");
+    return $res;
+});
+
+$app->post('/enroll', function (Request $request) use ($db) {
+    $data = checkbody($request,["branchName","firstname","surname","age","town","postcode","email","housenumber"]);
+    $branch = $db->preparedQuery("SELECT branchName, branchAdmin FROM `branch` where branchName = ?",[$data["branchName"]])[0];
+    $content = "
+                Iemand heeft zich ingeschreven voor de ".$data["branchName"].".<br/>
+                <br/>
+                Naam: ".$data["firstname"]." ".$data["surname"]."<br/>
+                Leeftijd: ".$data["age"]."<br/>
+                Adres: ".$data["town"].", ".$data["postcode"].", huisnummer: ".$data["housenumber"]."<br/>
+                Email: ".$data["email"]."<br/>
+                Telefoon: ".$request->request->get("phonenumber")."<br/>
+                ";
+    require_once __DIR__."/helpers/mail.php";
+    $res = Mailer::getInstance()->sendMail("Aanmelding voor ".$data["branchName"], $content, $branch["branchName"]."@scoutinghuissenzand.nl", $branch["branchName"]." beheerder") == 202;
+    $res = $res && Mailer::getInstance()->sendMail("Aanmelding voor ".$data["branchName"], $content, $branch["branchAdmin"], $branch["branchName"]." beheerder") == 202;
+    if($res){
+        return new Response("Aanmelding voltooid");
+    }else{
+        throw new HttpException(500,"Aanmelding niet verstuurd");
+    }
+});
+
+$app->mount('', require __DIR__."/controllers/user.php");
+$app->mount('', require __DIR__."/controllers/albums.php");
+$app->mount('', require __DIR__."/controllers/branch.php");
+$app->mount('', require __DIR__."/controllers/event.php");
+$app->mount('', require __DIR__."/controllers/tab.php");
+$app->mount('', require __DIR__."/controllers/images.php");
+
+
+
+
+$app->view(function (array $controllerResult) use ($app) {
+    return $app->json($controllerResult);
+});
+
+$app->error(function (\Exception $e, Request $request, $code) use ($app) {
+    return new JsonResponse(["message"=>$e->getMessage()]);
+});
+
+// $app->register(new JDesrosiers\Silex\Provider\CorsServiceProvider(), [
+//     "cors.allowOrigin" => "http://localhost:8080",
+//     "cors.allowCredentials" => true,
+// ]);
+
+
+$app->before($jsonBody);
+$app->after($resultToError);
+
+// $app["cors-enabled"]($app);
+header("Access-Control-Allow-Origin: http://localhost:8080");
 header("Access-Control-Allow-Credentials: true");
 
 $method = $_SERVER['REQUEST_METHOD'];
 if ($method == "OPTIONS") {
     header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method,Access-Control-Request-Headers, Authorization, cache-control");
+    header("Access-Control-Allow-Methods: DELETE, GET, POST, PUT, OPTIONS");
+
     header("HTTP/1.1 200 OK");
     die();
-    }
-
-$endPoints = ["info" => "getNavInfo.php",
-"user/delete" => "account/deleteUser.php",
- "user/logout" => "account/log-out.php",
- "user/login" => "account/login.php",
- "user/signup" => "account/sign-up.php",
- "user/get" => "account/getUser.php",
- "user/get/all" => "account/getAllUsers.php",
- "user/validate" => "account/validate.php",
- "user/promote" => "account/setAdmin.php",
-  "branch/get" => "branch/getBranch.php",
-  "branch/assign" => "branch/insertBranch.php",
-  "branch/update" => "branch/updateBranch.php",
-  "branch/delete" => "branch/deleteBranch.php",
-  "branch/photo/delete" => "images/branch/delete.php",
-  "branch/photo/upload" => "images/branch/upload.php",
-  "branch/album/insert" => "images/branch/insertAlbum.php",
-  "branch/album/delete" => "images/branch/deleteAlbum.php",
-  "branch/albums/get" => "images/branch/getAlbums.php",
-  "albums/get" => "images/getAllAlbums.php",
-  "event/get" => "event/getEvent.php",
-  "event/getall" => "event/getAllEvents.php",
-  "event/get/branch" => "event/getEventsForBranch.php",
-  "event/insert" => "event/insertEvent.php",
-  "event/update" => "event/updateEventDate.php",
-  "event/delete" => "event/deleteEvent.php",
-  "tab/delete" => "tab/deleteTab.php",
-  "tab/get" => "tab/getTab.php",
-  "tab/insert" => "tab/insertTab.php",
-  "images/insert" => "images/insertImage.php",
-  "images/remove" => "images/removeImage.php",
-  "images/check" => "images/checkImages.php",
-  "enroll" => "enroll.php",
-
-];
-
-
-
-if(!isset($_GET['path'])){
-    http_response_code(404);
-}else{
-    try{
-        $found = false;
-        foreach($endPoints as $key => $endPoint){
-            if($key == $_GET["path"]){
-                require_once "env.php";
-                require_once $endPoint;
-                $funcName = str_replace("/","_",$key);
-
-                if(!($funcName == "branch_photo_upload" || $funcName == "email_parse")){
-                    $_POST = json_decode(file_get_contents("php://input"), true);
-                }
-                if(function_exists($funcName)){
-                    require_once "vendor/autoload.php";
-                    $funcName();
-                    $found = true;
-                break;
-                }else{
-                    http_response_code(404);
-                }
-                echo "endpoint configured incorrectly <br>";
-                exit;
-            }
-        }
-        if(!$found){
-            http_response_code(404);
-            echo "endpoint unknown <br>";
-        }
-    }catch(Exception $e){
-        http_response_code(404);
-    }
 }
 
-?>
+$app->run();
