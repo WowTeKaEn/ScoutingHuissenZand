@@ -39,6 +39,17 @@
           alt="image slot"
         />
     </div>
+      <div class="carousel-cell clean-block clean-hero">
+      <div class="text carousel-text">
+        <h3>Welpen</h3>
+      </div>
+      <img
+          style="object-fit: cover;"
+          class="d-block w-100"
+          src="https://res.cloudinary.com/duj1jfopx/image/upload/v1601669294/a6dc5816-0709-48e3-9849-4afe30ab1dab_vmvyra.jpg"
+          alt="image slot"
+        />
+    </div>
   </flickity>
 </template>
 
