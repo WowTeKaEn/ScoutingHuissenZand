@@ -25,7 +25,7 @@
     </section>
 
     <section
-      v-if="albums != null && albums.length > 0"
+      v-if="albums  && albums.length > 0"
       class="p-0 py-5 photo-block"
     >
       <b-container class="py-5">
@@ -50,24 +50,13 @@
           <h2 class="text-info">Evenementen</h2>
           <p>Hier staan alle aankomende evenementen van de scouting</p>
         </div>
-        <div>
-          <event-card class="mt-3" v-for="event in events" :key="event.title + event.start + event.end" :event="event"></event-card>
-        </div>
-        <div class="d-flex mt-5">
+        <div class="mt-5">
           <h2>Kalender</h2>
-          <b-button
-            v-b-toggle.calendar-collapse
-            class="ml-auto"
-            variant="primary"
-            >Open kalender</b-button
-          >
-        </div>
-        <b-collapse id="calendar-collapse" class="mt-2">
           <calendarViewer
             v-if="calendarReturned"
             v-bind:events="events"
           ></calendarViewer>
-        </b-collapse>
+        </div>
       </b-container>
     </section>
   </div>
@@ -80,12 +69,11 @@ import carousel from "@/components/layout/carousel.vue";
 import calendarViewer from "@/components/content/events/calendarViewer";
 import albumViewer from "@/components/content/albumViewer";
 import VueMixin from "@/main.js";
-import eventCard from "@/components/content/events/eventCard.vue"
 
 export default {
   name: "Home",
   props: ["tabs", "branches"],
-  components: { teammember, carousel, calendarViewer, albumViewer, eventCard },
+  components: { teammember, carousel, calendarViewer, albumViewer },
   data() {
     return {
       calendarReturned: false,
@@ -108,7 +96,7 @@ export default {
   },
   created() {
     axios
-      .post("/event/getall")
+      .get("/event")
       .then((response) => {
         response.data.forEach((event) => {
           this.events.push({
@@ -121,16 +109,14 @@ export default {
         });
         this.calendarReturned = true;
       })
-      .catch((error) => {
+      .catch(() => {
         this.calendarReturned = true;
-        if (error.response.status != 404) {
           this.$bvToast.toast(
             "Kalender kon niet worden opgehaald",
             VueMixin.toastObject("Error")
           );
-        }
       });
-    axios.get("albums/get").then((response) => {
+    axios.get("albums/each").then((response) => {
       this.albums = response.data;
     });
   },

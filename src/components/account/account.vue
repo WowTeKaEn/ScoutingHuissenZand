@@ -46,7 +46,7 @@ export default {
   methods: {
     logOut() {
       axios
-        .post("/user/logout")
+        .delete("/user")
         .then(response => {
           VueMixin.throwResponse(response, null, () => {
            setCookie("loggedIn", "false");
@@ -60,7 +60,7 @@ export default {
     editBranch(branch) {
       branch.loading = true;
       axios
-        .post("/branch/get",{branchName: branch.branchName})
+        .get("/branch/" + branch.branchName)
         .then(response => {
           VueMixin.throwResponse(response, null, () => {
            if (response.data.branchDescription == null) {

@@ -98,9 +98,7 @@ export default {
   },
   created() {
     axios
-      .post("/branch/albums/get", {
-        branchName: this.branch.branchName,
-      })
+      .get("/albums/" + this.branch.branchName)
       .then((response) => {
         this.albums = response.data;
         this.returned = true;
@@ -109,10 +107,7 @@ export default {
   methods: {
     deleteAlbum(index) {
       axios
-        .post("/branch/album/delete", {
-          branchName: this.branch.branchName,
-          albumId: this.albums[index].id,
-        })
+        .delete("/albums/" + this.albums[index].id)
         .then(() => {
           if (index == this.currentAlbum) {
             this.currentAlbum = null;
@@ -122,10 +117,7 @@ export default {
     },
     createAlbum(albumName) {
       axios
-        .post("/branch/album/insert", {
-          branchName: this.branch.branchName,
-          albumName: albumName,
-        })
+        .post("/albums/" + this.branch.branchName + "/" + albumName)
         .then((response) => {
           response.data[0].images = [];
           this.albums.push(response.data[0]);
@@ -135,6 +127,9 @@ export default {
       for (let i = 0; i < images.length; i++) {
         this.albums[id].images.unshift({
           url: images[i].url,
+          h: images[i].h,
+          w: images[i].w,
+          albumId: images[i].albumId,
           deleting: false,
         });
       }
@@ -143,9 +138,8 @@ export default {
       this.albums[index].images[imageId].deleting = true;
       this.reload++;
       axios
-        .post("/branch/photo/delete", {
-          albumId: this.albums[index].id,
-          image: image.url,
+        .delete("/albums/" +  this.albums[index].id + "/image",{
+          data: {image: image.url}
         })
         .then((response) => {
           this.uploading = false;
@@ -159,11 +153,7 @@ export default {
         })
         .catch((error) => {
           this.uploading = false;
-          if (error.response.status === 401) {
-            this.$bvToast.toast("Unauthorised", Vue.toastObject("Error"));
-          } else {
-            this.$bvToast.toast(error + "", Vue.toastObject("Error"));
-          }
+          this.$bvToast.toast(error + "", Vue.toastObject("Error"));
         });
     },
   },

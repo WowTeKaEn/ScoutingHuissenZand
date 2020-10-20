@@ -51,10 +51,10 @@ export default {
     },
     attemptToSubmit() {
       this.tabDescription = this.$refs.editor.editDescription;
-      if (this.tabName !== null && this.tabDescription !== "") {
+      if (this.tabName  && this.tabDescription !== "") {
         this.submitting = true;
         axios
-          .post("/tab/insert", {
+          .put("/tab", {
             tabName: this.tabName,
             tabDescription: this.$refs.editor.getDelta(),
             images: this.$refs.editor.images,
@@ -62,7 +62,7 @@ export default {
           })
           .then(response => {
             this.submitting = false;
-            if (response.status == 201) {
+            if (response.status == 200) {
               this.tabs.push({ tabName: this.tabName });
               this.$bvToast.toast("Tab toegevoegd", Vue.toastObject("Succes"));
             }else if(response.status == 200){
@@ -71,15 +71,9 @@ export default {
               this.$bvToast.toast("Unknown", Vue.toastObject("Error"));
             }
           })
-          .catch(error => {
+          .catch(() => {
             this.submitting = false;
-            if (error.response.status === 401) {
-              this.$bvToast.toast("Unauthorised", Vue.toastObject("succes"));
-            } else if (error.response.status == 400) {
-              this.$bvToast.toast("Tab niet toegevoegd", Vue.toastObject("succes"));
-            } else {
-              this.$bvToast.toast(error + "", Vue.toastObject("succes"));
-            }
+            this.$bvToast.toast("Tab niet toegevoegd", Vue.toastObject("succes"));
           });
       } else {
         this.$bvToast.toast("Vul alle velden in.", Vue.toastObject("succes"));

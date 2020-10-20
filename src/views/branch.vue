@@ -90,10 +90,10 @@ export default {
   },
   created() {
     axios
-      .post("/branch/get", { branchName: this.branchName })
+      .get("/branch/" + this.branchName)
       .then((response) => {
         this.returned = true;
-        if (response.status === 201) {
+        if (response.status === 200) {
           if (response.data == null) {
             router.push("/error/404");
           }
@@ -114,7 +114,7 @@ export default {
       window.FB.XFBML.parse();
     });
     axios
-      .post("/event/get/branch", { branchName: this.branchName })
+      .get("/event/" + this.branchName)
       .then((response) => {
         response.data.forEach((event) => {
           this.events.push({
@@ -126,14 +126,12 @@ export default {
         });
         this.calendarReturned = true;
       })
-      .catch((error) => {
+      .catch(() => {
         this.calendarReturned = true;
-        if (error.response.status != 404) {
           this.$bvToast.toast(
             "Kalender kon niet worden opgehaald",
             VueMixin.toastObject("Error")
           );
-        }
       });
   },
 };

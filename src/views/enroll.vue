@@ -85,7 +85,7 @@
               <b-col class="p-1">
                 <b-input
                   id="phonenumber"
-                  v-model="enrollment.phonenumber"
+                  v-model="phonenumber"
                   type="number"
                   placeholder="Telefoon nummer"
                 ></b-input>
@@ -97,7 +97,8 @@
               </b-col>
               <b-col class="p-1">
                 <div class="d-flex">
-                  <b-btn class="ml-auto" @click="submit" variant="primary">Aanmelden</b-btn>
+                  <b-btn class="ml-auto" @click="submit" variant="primary" v-if="!submitting">Aanmelden</b-btn>
+                  <b-btn class="ml-auto" v-else variant="primary" ><b-spinner  variant="light" type="grow" label="Spinning"></b-spinner></b-btn>
                 </div>
               </b-col>
             </b-row>
@@ -131,7 +132,7 @@ input {
 <script>
 import router from "@/router/index.js";
 import axios from "@/plugins/axios.js";
-import Vue from "@/main.js"
+import VueMixin from "@/main.js"
 
 export default {
   name: "enroll",
@@ -148,6 +149,8 @@ export default {
         email: null,
         housenumber: null,
       },
+      phonenumber: null,
+      submitting: false,
       branch: null,
       try: false,
       enrolled: false,
@@ -157,18 +160,21 @@ export default {
     submit() {
       this.try = true;
       if (this.missing.length == 0) {
+        this.submitting = true;
+        let enrollment = this.enrollment;
+        enrollment.phonenumber = this.phonenumber;
         axios
-          .post("/enroll", this.enrollment)
+          .post("/enroll", enrollment)
           .then((response) => {
             this.returned = true;
-            if (response.status === 202) {
+            if (response.status === 200) {
               this.enrolled = true;
             } else {
-              this.$bvToast.toast("Unkown", Vue.toastObject("Error"));
+              this.$bvToast.toast("Unknown", VueMixin.toastObject("Error"));
             }
           })
           .catch((error) => {
-            this.$bvToast.toast(error + "", Vue.toastObject("Error"));
+            this.$bvToast.toast(error.response.data.message, VueMixin.toastObject("Error"));
           });
       }
     },

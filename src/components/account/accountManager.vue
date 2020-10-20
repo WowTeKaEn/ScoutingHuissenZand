@@ -1,9 +1,6 @@
 <template>
   <b-card>
-    <div class="w-100 d-flex" v-if="!returned">
-      <b-spinner class="m-auto" variant="primary" label="Spinning"></b-spinner>
-    </div>
-    <div v-else class="account-table">
+    <div class="account-table">
       <table class="w-100 mb-2">
         <tr>
           <th>Email</th>
@@ -88,18 +85,11 @@ import VueMixin from "@/main.js";
 
 export default {
   name: "accountManager",
-  data() {
-    return {
-      users: [],
-      returned: false,
-    };
-  },
+  props: ["users"],
   methods: {
     deleteUser(user) {
       axios
-        .post("/user/delete", {
-          email: user.email,
-        })
+        .delete("/user/" + user.email)
         .then((response) => {
           VueMixin.throwResponse(response, null, () => {
             this.users = this.users.filter((u) => u.email !== user.email);
@@ -110,10 +100,9 @@ export default {
         });
     },
     updateActivated(user) {
+      console.log(user.deletable);
       axios
-        .post("/user/validate", {
-          email: user.email,
-        })
+        .put("/user/validate/" + user.email)
         .then((response) => {
           VueMixin.throwResponse(response, () => {
             user.validated != user.validated;
@@ -127,9 +116,7 @@ export default {
     },
     updateAdmin(user) {
       axios
-        .post("/user/promote", {
-          email: user.email,
-        })
+        .put("/user/promote/" + user.email)
         .then((response) => {
           VueMixin.throwResponse(response, () => {
             user.admin != user.admin;
@@ -141,23 +128,6 @@ export default {
           });
         });
     },
-  },
-  created() {
-    axios
-      .get("/user/get/all")
-      .then((response) => {
-        VueMixin.throwResponse(
-          response,
-          () => (this.returned = true),
-          () => {
-            this.users = response.data;
-            this.returned = true;
-          }
-        );
-      })
-      .catch((error) => {
-        VueMixin.throwError(error, () => (this.returned = true));
-      });
   },
 };
 </script>

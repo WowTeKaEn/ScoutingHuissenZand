@@ -63,7 +63,7 @@ function update_user($branchName, $dismiss = false, $branchAdmin = "") {
 }
 
 function send_account_details($branchName, $branchAdmin, $password) {
-    require_once "Mail/Mail.php";
+    require_once "mail.php";
     $temp = Mailer::getInstance()->sendMail("Inlog gegevens voor email account", "
     <p>Gebruikersnaam: " . $branchName . "@scoutinghuissenzand.nl<br>
     Wachtwoord: " . $password . "<br>
@@ -73,7 +73,6 @@ function send_account_details($branchName, $branchAdmin, $password) {
     Gebruik dit email adres niet voor persoonlijke doeleinden.<br>
     De admin kan mocht het nodig zijn ook bij dit email adres.
     </p>", $branchAdmin, ucfirst($branchName) . " Admin");
-    var_dump($temp);
     if ($temp !== 202) {
         
         return false;

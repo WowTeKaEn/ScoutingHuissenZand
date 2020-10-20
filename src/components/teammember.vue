@@ -53,7 +53,7 @@ export default {
   },
   computed:{
     picture: function () {
-      if(this.branch.facebookUsername != "" && this.branch.facebookUsername != null){
+      if(this.branch.facebookUsername != "" && this.branch.facebookUsername ){
         return 'https://graph.facebook.com/' + this.branch.facebookUsername + '/picture?height=400&width=400';
       }else {
         return this.instaPicture;
@@ -61,7 +61,7 @@ export default {
     }
   },
   created() {
-    if (this.branch.instaUsername != "" && this.branch.instaUsername != null) {
+    if (this.branch.instaUsername != "" && this.branch.instaUsername ) {
       this.getInstaInfo(this.branch);
     }
   }

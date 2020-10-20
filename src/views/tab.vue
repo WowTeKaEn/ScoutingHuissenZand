@@ -3,7 +3,7 @@
       <b-container>
         <h1>{{ tab }}</h1>
         <b-card class="clean-card">
-          <quillViewer v-bind:ready="tabDescription !== null" v-bind:quill="tabDescription"></quillViewer>
+          <quillViewer v-bind:ready="tabDescription " v-bind:quill="tabDescription"></quillViewer>
         </b-card>
       </b-container>
     </section>
@@ -36,10 +36,10 @@ export default {
   },
   created() {
     axios
-      .post("/tab/get", {tab: this.tab})
+      .get("/tab/" + this.tab)
       .then(response => {
         this.returned = true;
-        if (response.status === 201) {
+        if (response.status === 200) {
           if (response.data.tabDescription == null) {
             router.push("/error/404");
           }
