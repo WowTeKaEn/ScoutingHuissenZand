@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 require_once __DIR__.'/vendor/autoload.php';
 require __DIR__.'/helpers/env.php';
 require __DIR__.'/helpers/middleware.php';
-require_once __DIR__."/helpers/databaseaccess.php";
+require_once "./helpers/databaseAccess.php";
 
 session_start();
 \Cloudinary::config(array(
@@ -26,14 +26,9 @@ $db = db::getInstance();
 
 require_once __DIR__.'/helpers/functions.php';
 
-
 $app = new Silex\Application();
 
-
-
-
-
-$app->get('/info', function (Request $request) use ($db, $loggedIn, $app) {
+$app->get('info', function (Request $request) use ($db, $loggedIn, $app) {
     $res;
     $sql = "SELECT branchName, branchAdmin, instaUsername, facebookUsername FROM `branch`";
     try {
@@ -46,7 +41,7 @@ $app->get('/info', function (Request $request) use ($db, $loggedIn, $app) {
     return $res;
 });
 
-$app->post('/enroll', function (Request $request) use ($db) {
+$app->post('enroll', function (Request $request) use ($db) {
     $data = checkbody($request,["branchName","firstname","surname","age","town","postcode","email","housenumber"]);
     $branch = $db->preparedQuery("SELECT branchName, branchAdmin FROM `branch` where branchName = ?",[$data["branchName"]])[0];
     $content = "
@@ -86,17 +81,10 @@ $app->error(function (\Exception $e, Request $request, $code) use ($app) {
     return new JsonResponse(["message"=>$e->getMessage()]);
 });
 
-// $app->register(new JDesrosiers\Silex\Provider\CorsServiceProvider(), [
-//     "cors.allowOrigin" => "http://localhost:8080",
-//     "cors.allowCredentials" => true,
-// ]);
-
-
 $app->before($jsonBody);
 $app->after($resultToError);
 
-// $app["cors-enabled"]($app);
-header("Access-Control-Allow-Origin: http://localhost:8080");
+header("Access-Control-Allow-Origin: https://www.scoutinghuissenzand.nl");
 header("Access-Control-Allow-Credentials: true");
 
 $method = $_SERVER['REQUEST_METHOD'];

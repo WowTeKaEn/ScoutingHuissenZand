@@ -6,7 +6,7 @@ use Symfony\Component\HttpFoundation\Request;
 $album = $app['controllers_factory'];
 
 $album->get("/albums/each", function () use ($db) {
-    return getAlbums("SELECT *, (branchName) as albumName FROM `branchalbum` GROUP BY branchName order by inserted desc", []);
+    return getAlbums("SELECT id, branchName, inserted, (branchName) as name FROM `branchalbum` GROUP BY branchName order by inserted desc", []);
 });
 
 $album->get("/albums/{branchName}", function ($branchName) use ($db) {
