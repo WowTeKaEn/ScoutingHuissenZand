@@ -2,7 +2,7 @@
 node_modules
 dist
 
-/public/api/vendor/*
+api/vendor/*
 
 # local env files
 .env.local
