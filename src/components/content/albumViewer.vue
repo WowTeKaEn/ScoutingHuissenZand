@@ -18,8 +18,7 @@
           :key="`${albumIndex}`"
           class="album-carousel-cell"
         >
-          <p class="album-text">{{ album.name }}</p>
-          <img class="image" :src="album.images[0].msrc" alt />
+          <p :style="imageString(album.images[0].msrc)" class="album-text" v-html="getName(album)"></p>
         </div>
       </flickity>
     </b-overlay>
@@ -91,20 +90,29 @@ export default {
         this.$refs.flickity.select(cellIndex);
       });
     },
+    imageString(img){
+      return "background-image: url('" + img + "')"; 
+    },
+    getName(album){
+      let str = album.name.replace(/ /, "<br>");
+      return str.replace(/ /, "<br>");
+
+    }
   },
 };
 </script>
 
 <style>
 .album-text {
-  position: absolute;
-  top: 0;
-  padding-top: 10px;
-  left: 0;
-  right: 0;
+  /* position: absolute; */
+  opacity: 1 !important;
+  background-size: cover;
+  padding-top: 0.5em;
+  padding-left: 1em;
+  padding-right: 1em;
+  line-height: 1em;
   height: 100%;
   width: 100%;
-  bottom: 0;
   text-align: center;
   color: #fff;
   font-size: 1.5rem !important;

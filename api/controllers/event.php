@@ -79,13 +79,14 @@ $event->get("/event/{branchName}", function (Request $request, $branchName) use 
                 return $db->preparedQuery("SELECT * FROM `event` where branchName = ?", [$branchName]);
             }
         }
+        return $db->preparedQuery("SELECT * FROM `event` where visible = 1 and branchName = ?", [$branchName]);
     } catch (AccessDeniedHttpException $th) {
         return $db->preparedQuery("SELECT * FROM `event` where visible = 1 and branchName = ?", [$branchName]);
     }
 });
 
 $event->get("/event", function (Request $request) use ($db) {
-    return $db->executeQuery("SELECT * FROM `event` where visible = 1");
+    return $db->executeQuery("SELECT * FROM `event` where visible = 1 and endDate > NOW()");
 });
 
 $event->delete("/event", function (Request $request) use ($db) {

@@ -46,7 +46,9 @@ $branch->post("/branch", function (Request $request) use ($db) {
 ->before($isAdmin);
 
 $branch->put("/branch/{branchName}", function (Request $request, $branchName) use ($db) {
-    $data = checkbody($request, ["branchDescription","instaUsername","facebookUsername","visible"]);
+    $data = checkbody($request, ["branchDescription","visible"]);
+    $data["instaUsername"] = $request->request->get("instaUsername");
+    $data["facebookUsername"] = $request->request->get("facebookUsername");
     $res = $db->preparedInsert(
         "update `branch` set branchDescription = ?, instaUsername = ?, facebookUsername = ?, visible = ?  where branchName = ? and branchAdmin = ?",
         [$data["branchDescription"], $data["instaUsername"], $data["facebookUsername"], $data["visible"], $branchName, $_SESSION['user']["email"]]

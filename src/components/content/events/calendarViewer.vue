@@ -15,7 +15,7 @@
 
     <b-sidebar v-model="sideBarEvent" id="sidebar-right" :title="sidebarTitle" right shadow>
       <div class="w-100 d-flex">
-        <span class="mx-auto pl-3 pr-1" v-if="sideBarEvent">{{ getFormattedDate }}</span>
+        <span class="mx-auto pl-3 pr-1" v-if="sideBarEvent">{{ getFormattedDate(sidebarStart,sidebarEnd) }}</span>
       </div>
       <quillViewer v-bind:ready="sideBarEvent" v-bind:quill="sidebarDescription"></quillViewer>
     </b-sidebar>
@@ -61,7 +61,6 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import FullCalendar from "@fullcalendar/vue";
 import interactionPlugin from "@fullcalendar/interaction";
 import nlLocale from "@fullcalendar/core/locales/nl";
-import { formatDate } from "@fullcalendar/core";
 import bootstrap from "@fullcalendar/bootstrap";
 import listPlugin from "@fullcalendar/list";
 import quillViewer from "@/components/content/editor/quillViewer";
@@ -107,25 +106,5 @@ export default {
       this.sideBarEvent = true;
     }
   },
-  computed: {
-    getFormattedDate() {
-      return (
-        "Van " +
-        formatDate(this.sidebarStart, {
-          month: "long",
-          year: "numeric",
-          day: "numeric",
-          locale: nlLocale
-        }) +
-        " tot " +
-        formatDate(this.sidebarEnd, {
-          month: "long",
-          year: "numeric",
-          day: "numeric",
-          locale: nlLocale
-        })
-      );
-    }
-  }
 };
 </script>

@@ -1,8 +1,14 @@
 <template>
-  <section id="background-img" :style="backGround" class="clean-block p-0 py-5 dark">
+  <section
+    id="background-img"
+    :style="backGround"
+    class="clean-block p-0 py-5 dark"
+  >
     <b-container>
       <div class="d-flex justify-content-between">
-        <h2 style="color:white;text-shadow: 1px 2px black;" >{{ branchName }}</h2>
+        <h2 style="color: white; text-shadow: 1px 2px black">
+          {{ branchName }}
+        </h2>
         <b-btn
           :href="branchName + '/inschrijven'"
           class="mb-2"
@@ -46,6 +52,11 @@
                 <i class="fab fa-facebook fa-2x"></i>
               </a>
             </li>
+            <li class="list-inline-item">
+              <a class="social-link" :href="`mailto: ${branch.branchAdmin}`">
+                <i class="fa fa-envelope fa-2x"></i>
+              </a>
+            </li>
           </ul>
         </div>
         <div
@@ -73,7 +84,6 @@ import quillViewer from "@/components/content/editor/quillViewer";
 import calendarViewer from "@/components/content/events/calendarViewer";
 import albumViewer from "@/components/content/albumViewer";
 
-
 export default {
   name: "branch",
   props: ["branchName"],
@@ -98,7 +108,8 @@ export default {
             router.push("/error/404");
           }
           this.branch = response.data;
-          this.backGround = "background-image: url('"+this.branch.backgroundImg+"');"
+          this.backGround =
+            "background-image: url('" + this.branch.backgroundImg + "');";
         } else {
           router.push("/error/404");
         }
@@ -128,10 +139,10 @@ export default {
       })
       .catch(() => {
         this.calendarReturned = true;
-          this.$bvToast.toast(
-            "Kalender kon niet worden opgehaald",
-            VueMixin.toastObject("Error")
-          );
+        this.$bvToast.toast(
+          "Kalender kon niet worden opgehaald",
+          VueMixin.toastObject("Error")
+        );
       });
   },
 };
@@ -141,9 +152,9 @@ export default {
   width: 100% !important;
 }
 
-#background-img{
-    background-size: cover;
-    background-attachment: fixed;
-    background-image: url(~@/assets/img/20190725_084919.jpg);
+#background-img {
+  background-size: cover;
+  background-attachment: fixed;
+  background-image: url(~@/assets/img/20190725_084919.jpg);
 }
 </style>

@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 require_once __DIR__.'/vendor/autoload.php';
 require __DIR__.'/helpers/env.php';
 require __DIR__.'/helpers/middleware.php';
-require_once "./helpers/databaseAccess.php";
+require_once __DIR__."/helpers/databaseAccess.php";
 
 session_start();
 \Cloudinary::config(array(
@@ -30,7 +30,7 @@ $app = new Silex\Application();
 
 $app->get('info', function (Request $request) use ($db, $loggedIn, $app) {
     $res;
-    $sql = "SELECT branchName, branchAdmin, instaUsername, facebookUsername FROM `branch`";
+    $sql = "SELECT branchName, branchAdmin, instaUsername, facebookUsername, branchImage FROM `branch`";
     try {
         call_user_func($loggedIn, $request, $app);
     } catch (\Exception $th) {
@@ -83,8 +83,9 @@ $app->error(function (\Exception $e, Request $request, $code) use ($app) {
 
 $app->before($jsonBody);
 $app->after($resultToError);
-
-header("Access-Control-Allow-Origin: https://www.scoutinghuissenzand.nl");
+// https://www.scoutinghuissenzand.nl
+// http://localhost:8080
+header("Access-Control-Allow-Origin: http://localhost:8080");
 header("Access-Control-Allow-Credentials: true");
 
 $method = $_SERVER['REQUEST_METHOD'];

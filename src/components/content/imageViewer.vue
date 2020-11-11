@@ -1,5 +1,5 @@
-<template >
-  <vue-preview class="d-flex flex-column align-items-center" :slides="images"></vue-preview>
+<template>
+  <vue-preview :slides="images"></vue-preview>
 </template>
 
 
@@ -118,6 +118,7 @@ export default {
 }
 
 .my-gallery {
+  margin:auto;
   max-width: 800px;
   @extend .grid;
   @extend .square;

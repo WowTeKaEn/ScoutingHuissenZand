@@ -10,7 +10,8 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 
 
 require('@/assets/css/all.min.css');
-
+import { formatDate } from "@fullcalendar/core";
+import nlLocale from "@fullcalendar/core/locales/nl";
 
 
 Vue.mixin({
@@ -37,6 +38,24 @@ Vue.mixin({
           call(err);
         }
         this.$bvToast.toast(err.response.data.message, this.toastObject("Error"));
+  },
+  getFormattedDate(start,end) {
+    return (
+      "Van " +
+      formatDate(start, {
+        month: "long",
+        year: "numeric",
+        day: "numeric",
+        locale: nlLocale
+      }) +
+      " tot " +
+      formatDate(end, {
+        month: "long",
+        year: "numeric",
+        day: "numeric",
+        locale: nlLocale
+      })
+    );
   }
 
   }

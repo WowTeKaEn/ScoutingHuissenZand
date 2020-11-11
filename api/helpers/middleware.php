@@ -6,10 +6,6 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Silex\Application;
 
-require_once __DIR__."/databaseaccess.php";
-
-
-
 $jsonBody = function (Request $request) {
     if (strpos($request->headers->get('Content-Type'), 'application/json') === 0) {
         $data = json_decode($request->getContent(), true);

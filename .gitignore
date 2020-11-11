@@ -1,11 +1,15 @@
 .DS_Store
 node_modules
+dist
 
 /public/api/vendor/*
 
 # local env files
 .env.local
 .env.*.local
+
+
+env.php
 
 # Log files
 npm-debug.log*

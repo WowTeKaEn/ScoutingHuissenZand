@@ -12,13 +12,13 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
-    meta: {title: () => { return "Index" + titleAppend }} 
+    meta: {title: () => { return "Home" + titleAppend }} 
   },
   {
     path: "/index",
     name: "Index",
     component: Home,
-    meta: {title: () => { return "Index" + titleAppend }} 
+    meta: {title: () => { return "Home" + titleAppend }} 
   },
   {
     path: "/staf",

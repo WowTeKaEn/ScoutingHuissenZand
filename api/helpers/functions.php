@@ -2,6 +2,7 @@
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 
 
@@ -114,4 +115,18 @@ function getIdFromUrl($url){
 
 function createDate($dateString) {
     return date('Y-m-d', strtotime(substr($dateString, 0, 10)));
+}
+
+function getInfoPHP(){
+    require __DIR__.'/env.php';
+    require_once __DIR__."/databaseAccess.php";
+    $db = db::getInstance();
+    $res;
+    $sql = "SELECT branchName, branchAdmin, instaUsername, facebookUsername FROM `branch`";
+    if(!isset($_SESSION["user"]) || !$_SESSION["user"]["activated"]){
+        $sql .= "where visible = 1";
+    }
+    $res["branches"] = $db->executeQuery($sql);
+    $res["tabs"] = $db->executeQuery("SELECT tabName FROM `tabs`");
+    return $res;
 }

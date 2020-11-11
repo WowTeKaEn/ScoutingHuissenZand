@@ -5,8 +5,7 @@
     >
     <img
         class="rounded-circle mx-auto"
-        :src="picture"
-        onerror="this.onerror=null;this.src='https://scoutingrvp.nl/wp-content/uploads/2019/07/Naamloos.png'"
+        :src="branch.branchImage"
       />
     </a>
     <h4 class="mx-auto mt-3" style="color: #28a745;">{{ branch.branchName }}</h4>
@@ -21,50 +20,20 @@
           <i class="fab fa-facebook fa-2x"></i>
         </a>
       </li>
+      <li class="list-inline-item">
+        <a class="social-link" :href="`mailto: ${branch.branchAdmin}`">
+          <i class="fa fa-envelope fa-2x"></i>
+        </a>
+      </li>
     </ul>
   </div>
 </template>
 
 <script>
-import axios from "@/plugins/axios.js";
 
 export default {
   name: "teammember",
   props: ["branch"],
-  data(){
-    return {
-          instaPicture: '',
-    }
-  },
-  methods: {
-    getInstaInfo(branch) {
-      axios
-        .get("https://www.instagram.com/web/search/topsearch/?query=" + branch.instaUsername, {
-          baseUrl: "",
-          withCredentials: false
-        })
-        .then(response => {
-          this.instaPicture =
-          response.data["users"][0]["user"]["profile_pic_url"];
-        }).catch(() => {
-            this.instaPicture = "https://scoutingrvp.nl/wp-content/uploads/2019/07/Naamloos.png"
-        })
-    }
-  },
-  computed:{
-    picture: function () {
-      if(this.branch.facebookUsername != "" && this.branch.facebookUsername ){
-        return 'https://graph.facebook.com/' + this.branch.facebookUsername + '/picture?height=400&width=400';
-      }else {
-        return this.instaPicture;
-      }
-    }
-  },
-  created() {
-    if (this.branch.instaUsername != "" && this.branch.instaUsername ) {
-      this.getInstaInfo(this.branch);
-    }
-  }
 };
 </script>
 

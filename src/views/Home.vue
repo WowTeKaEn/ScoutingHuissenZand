@@ -48,14 +48,27 @@
       <b-container>
         <div class="block-heading p-0">
           <h2 class="text-info">Evenementen</h2>
-          <p>Hier staan alle aankomende evenementen van de scouting</p>
+          <p v-if="events.length">Hier staan alle aankomende evenementen van de scouting</p>
+          <p v-else>Er zijn momenteel geen aankomende evenementen</p>
         </div>
-        <div class="mt-5">
-          <h2>Kalender</h2>
+        <div v-if="events.length" class="mt-5">
+          <b-container class="event-cards mb-3">
+            <b-row>
+              <b-col class="mb-5 mb-md-3"  md="6" v-for="event in events" :key="event.start +   event.end">
+                <h5>{{ event.title }}</h5>
+                <hr class="mb-0">
+                <span class="text-muted" style="font-size:10px;">{{getFormattedDate(event.start,event.end)}}</span>
+                <quillViewer :ready="true" :quill="event.description"></quillViewer>
+              </b-col>
+            </b-row>
+          </b-container>
+          <b-button variant="primary" v-b-toggle.calendar-collapse class="d-flex mx-auto my-3">Open Kalender</b-button>
+          <b-collapse id="calendar-collapse">
           <calendarViewer
             v-if="calendarReturned"
             v-bind:events="events"
           ></calendarViewer>
+          </b-collapse>
         </div>
       </b-container>
     </section>
@@ -68,12 +81,15 @@ import teammember from "@/components/teammember.vue";
 import carousel from "@/components/layout/carousel.vue";
 import calendarViewer from "@/components/content/events/calendarViewer";
 import albumViewer from "@/components/content/albumViewer";
+import quillViewer from "@/components/content/editor/quillViewer";
 import VueMixin from "@/main.js";
+
+
 
 export default {
   name: "Home",
   props: ["tabs", "branches"],
-  components: { teammember, carousel, calendarViewer, albumViewer },
+  components: { teammember, carousel, calendarViewer, albumViewer, quillViewer },
   data() {
     return {
       calendarReturned: false,
@@ -145,6 +161,10 @@ export default {
 
 .clean-block {
   background-color: white;
+}
+
+.event-cards .ql-editor {
+    min-height: unset;
 }
 
 .clean-hero {
