@@ -37,13 +37,13 @@ There is a built in php function which preloads some required information. This 
 
 this:
 
-```php+HTML
+```HTML
 <div id="app" data-model="<?php require_once "./api/helpers/functions.php"; echo json_encode(getInfoPHP()) ?>"></div>
 ```
 
 should be changed into:
 
-```php+HTML
+```HTML
 <div id="app" data-model='<?php require_once "./api/helpers/functions.php"; echo json_encode(getInfoPHP()) ?>'></div>
 ```
 
