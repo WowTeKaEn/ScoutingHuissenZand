@@ -90,6 +90,7 @@ export default {
         this.$refs.flickity.select(cellIndex);
       });
     },
+<<<<<<< HEAD
     imageString(img){
       return "background-image: url('" + img + "')"; 
     },
@@ -98,12 +99,15 @@ export default {
       return str.replace(/ /, "<br>");
 
     }
+=======
+>>>>>>> f6ac8843627dfa066d1fefeb463a026b9eec98b5
   },
 };
 </script>
 
 <style>
 .album-text {
+<<<<<<< HEAD
   /* position: absolute; */
   opacity: 1 !important;
   background-size: cover;
@@ -113,6 +117,16 @@ export default {
   line-height: 1em;
   height: 100%;
   width: 100%;
+=======
+  position: absolute;
+  top: 0;
+  padding-top: 10px;
+  left: 0;
+  right: 0;
+  height: 100%;
+  width: 100%;
+  bottom: 0;
+>>>>>>> f6ac8843627dfa066d1fefeb463a026b9eec98b5
   text-align: center;
   color: #fff;
   font-size: 1.5rem !important;

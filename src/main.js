@@ -10,9 +10,12 @@ import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 
 
 require('@/assets/css/all.min.css');
+<<<<<<< HEAD
 import { formatDate } from "@fullcalendar/core";
 import nlLocale from "@fullcalendar/core/locales/nl";
 
+=======
+>>>>>>> f6ac8843627dfa066d1fefeb463a026b9eec98b5
 
 Vue.mixin({
   methods: {
@@ -61,6 +64,38 @@ Vue.mixin({
   }
 })
 
+<<<<<<< HEAD
+=======
+Vue.mixin({
+  methods: {
+    toastObject: str => {
+      return {
+        title: str,
+      autoHideDelay: 5000,
+      appendToast: true
+      }
+    },
+    throwResponse(response,call,callElse){
+        if (response.status !== 200) {
+          call(response);
+          this.$bvToast.toast("Unknown", this.toastObject("Error"));
+        }else{
+          if(callElse){
+            callElse(response)
+          }
+        }
+    },
+    throwError(err,call){
+        if(call){
+          call(err);
+        }
+        this.$bvToast.toast(err.response.data.message, this.toastObject("Error"));
+  }
+
+  }
+})
+
+>>>>>>> f6ac8843627dfa066d1fefeb463a026b9eec98b5
 Vue.use(VuePreview)
 Vue.use(LoadScript);
 Vue.use(BootstrapVue);
