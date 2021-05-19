@@ -6,7 +6,7 @@
           <div class="d-flex flex-column m-auto">
             <img
               class="rounded-circle mx-auto"
-              src="https://res.cloudinary.com/duj1jfopx/image/upload/v1601146039/Screenshot_20200105-181425_qawpqv.jpg"
+              src="https://res.cloudinary.com/duj1jfopx/image/upload/v1606665521/Screenshot_20200105-181425_giro0d.jpg"
             />
             <h2 class="text-center">Wout Knuiman</h2>
             <p class="text-center m-auto" style="max-width:500px">

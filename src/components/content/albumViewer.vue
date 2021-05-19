@@ -1,9 +1,13 @@
 <template>
   <div>
-    <imageViewer
-      :key="currentAlbum"
-      :images="mutatedAlbums[currentAlbum].images"
-    ></imageViewer>
+    <div v-for="(album, index) in mutatedAlbums" :key="index">
+      <imageViewer
+        :album="index + 1"
+        :images="album.images"
+        v-if="index === currentAlbum"
+      ></imageViewer>
+    </div>
+
     <b-overlay class="mt-3" opacity="1" variant="white">
       <flickity
         v-images-loaded="loaded"
@@ -18,7 +22,11 @@
           :key="`${albumIndex}`"
           class="album-carousel-cell"
         >
-          <p :style="imageString(album.images[0].msrc)" class="album-text" v-html="getName(album)"></p>
+          <p
+            :style="imageString(album.images[0].msrc)"
+            class="album-text"
+            v-html="getName(album)"
+          ></p>
         </div>
       </flickity>
     </b-overlay>
@@ -39,7 +47,7 @@ export default {
   components: { Flickity, imageViewer },
   data() {
     return {
-        mutatedAlbums: this.albums,
+      mutatedAlbums: this.albums,
       imagesLoading: true,
       flickityOptions: {
         initialIndex: 0,
@@ -90,14 +98,13 @@ export default {
         this.$refs.flickity.select(cellIndex);
       });
     },
-    imageString(img){
-      return "background-image: url('" + img + "')"; 
+    imageString(img) {
+      return "background-image: url('" + img + "')";
     },
-    getName(album){
+    getName(album) {
       let str = album.name.replace(/ /, "<br>");
       return str.replace(/ /, "<br>");
-
-    }
+    },
   },
 };
 </script>

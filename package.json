@@ -7,7 +7,7 @@
     "servep": "vue-cli-service serve --mode production",
     "build": "vue-cli-service build --mode production",
     "publish": "vue-cli-service build --mode production && git add . && git commit -m",
-    "postpublish":"git push",
+    "postpublish": "git push",
     "nocommentpublish": "vue-cli-service build --mode production && git add . && git commit -m 'publish' && git push",
     "lint": "vue-cli-service lint",
     "stage": "vue-cli-service build --mode development"
@@ -33,8 +33,8 @@
     "raw-loader": "^4.0.0",
     "vue": "^2.6.11",
     "vue-flickity": "^1.2.1",
-    "vue-gallery": "^2.0.1",
     "vue-images-loaded": "^1.1.2",
+    "vue-photoswipe-directive": "git+https://github.com/WuttiFrutti/vue-photoswipe-directive.git",
     "vue-plugin-load-script": "^1.2.0",
     "vue-preview": "^1.1.3",
     "vue-router": "^3.1.6",

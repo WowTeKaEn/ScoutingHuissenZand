@@ -12,8 +12,10 @@ $event = $app['controllers_factory'];
 
 $event->put("/event/{branchName}", function (Request $request, $branchName) use ($db) {
     $data = checkbody($request, ["startDate","endDate","eventName","eventDescription"]);
-    if (!isset($data['visible'])) {
+    if ($request->request->get("visible") !== null) {
         $data["visible"] = 0;
+    }else{
+        $data["visible"] = $request->request->get("visible");
     }
     
     $data["startDate"] = createDate($data["startDate"]);
@@ -46,13 +48,14 @@ $event->put("/event/{branchName}", function (Request $request, $branchName) use 
             }else{
                 return new Response("Evenement aangemaakt",201);
             }
+        throw new HttpException(500, "Er is iets verkeerd gegaan ".$data['visible']);
         }
     }
     throw new HttpException(401, "Je moet eigenaar van de speltak zijn");
 })->before($loggedIn);
 
 $event->put("/event/{branchName}/date", function (Request $request, $branchName) use ($db) {
-    $data = checkbody($request, ["startdate","enddate","prevStartDate","prevEndDate","eventName"]);
+    $data = checkbody($request, ["startDate","endDate","prevStartDate","prevEndDate","eventName"]);
     
     $data["startDate"] = createDate($data["startDate"]);
     $data["endDate"]   = createDate($data["endDate"]);

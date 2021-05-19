@@ -1,60 +1,84 @@
 <template>
-  <vue-preview :slides="images"></vue-preview>
+  <div class="photo-gallery">
+    <div
+      v-for="(image, index) in images"
+      :key="image.src"
+      :style="
+        images.length > 4 && index === 3
+          ? 'grid-row: span 2; background-color:black'
+          : null
+      "
+    >
+      <img
+        v-preview:album
+        :src="image.msrc"
+        :data-origin="image.src"
+        :msrc="image.msrc"
+        :style="index === 3 && images.length > 5 ? 'opacity: 0.5;' : ''"
+        :width="image.w"
+        :height="image.h"
+        :ref="`gallery-image-${index}`"
+      />
+      <p
+        class="image-amount-overlay m-0"
+        style="opacity: 1"
+        v-if="index === 3 && images.length > 5"
+      >
+        <span class="image-amount-overlay-text m-auto">
+          {{ images.length - 5 }}+
+        </span>
+      </p>
+    </div>
+  </div>
 </template>
 
 
 <script>
+import createPreviewDirective from "vue-photoswipe-directive";
+import PhotoSwipe from "photoswipe/dist/photoswipe";
+import PhotoSwipeUI from "photoswipe/dist/photoswipe-ui-default";
+import "photoswipe/dist/photoswipe.css";
+import "photoswipe/dist/default-skin/default-skin.css";
+
 export default {
-  name: "image-viewer",
-  props: ["images"],
-  data() {
-    return {
-      style: null,
-    };
-  },
-  created() {
-    this.style = document.createElement("style");
-    document.head.appendChild(this.style);
-    this.checkImageAmount();
-  },
-  beforeDestroy() {
-    this.style.parentNode.removeChild(this.style);
-  },
-  methods: {
-    checkImageAmount() {
-      let images = this.images.length;
-      if (images > 5) {
-        this.style.innerHTML = `.my-gallery  :nth-child(4) a:after {content: '${
-          images - 5
-        }+';
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          text-align: center;
-          transform: translate(0, 50%);
-          line-height: 0;
+  directives: {
+    preview: createPreviewDirective(
+      {
+        getThumbBoundsFn: (index) => {
+          var thumbnail = document.querySelectorAll(".photo-gallery > div")[
+            index
+          ].firstElementChild;
+
+          var pageYScroll =
+            window.pageYOffset || document.documentElement.scrollTop;
+
+          var ratio = thumbnail.naturalWidth / thumbnail.naturalHeight;
+          var width = thumbnail.height * ratio;
+          var height = thumbnail.height;
+          if (width < thumbnail.width) {
+            width = thumbnail.width;
+            height = thumbnail.width / ratio;
           }
-          .my-gallery  :nth-child(4) a:before {
-            content: "";
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.4);
-            top: 0;
-            bottom: 0;
-          }`;
-      } else {
-        this.style.innerHTML = "";
-      }
-      if (images > 4) {
-        this.style.innerHTML += `.my-gallery :nth-child(4) {
-            grid-row: span 2
-          }`;
-      }
-    },
+          thumbnail.style.transform = `translate(${
+            (thumbnail.width - width) / 2
+          }px,${(thumbnail.height - height) / 2}px)`;
+
+          var rect = thumbnail.getBoundingClientRect();
+
+          thumbnail.style.transform = "unset";
+          return {
+            x: rect.left,
+            y: rect.top + pageYScroll,
+            w: width,
+          };
+        },
+      },
+      PhotoSwipe,
+      PhotoSwipeUI
+    ),
   },
+  name: "image-viewer",
+  props: ["images", "album"],
 };
 </script>
 
@@ -62,6 +86,21 @@ export default {
 :root {
   --gutter: 1px;
   --rh: calc((var(--wrapperWidth) - (11 * var(--gutter))) / 12);
+}
+
+.image-amount-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  pointer-events: none;
+}
+
+.image-amount-overlay-text {
+  color: white;
+  font-size: 70px;
 }
 
 .grid {
@@ -108,17 +147,8 @@ export default {
   object-fit: cover;
 }
 
-.my-gallery figure {
-  align-items: center;
-  // max-width: 80%;
-
-  margin: 0;
-
-  @extend .grid-item;
-}
-
-.my-gallery {
-  margin:auto;
+.photo-gallery {
+  margin: auto;
   max-width: 800px;
   @extend .grid;
   @extend .square;
@@ -128,20 +158,25 @@ export default {
     height: 100%;
     object-fit: cover;
   }
+  div {
+    align-items: center;
+    margin: 0;
+    @extend .grid-item;
+  }
 }
 
-.my-gallery :nth-child(1) {
+.photo-gallery :nth-child(1) {
   @extend .row-3;
-  img{
+  img {
     max-height: 50.3vh;
   }
 }
 
-.my-gallery :nth-child(n + 2) img{
+.photo-gallery :nth-child(n + 2) img {
   max-height: 25vh;
 }
 
-.my-gallery :nth-child(4) a {
+.photo-gallery :nth-child(4) a {
   height: 100%;
   display: flex;
   position: relative;
@@ -153,7 +188,7 @@ export default {
   }
 }
 
-.my-gallery :nth-child(n + 6) {
+.photo-gallery :nth-child(n + 6) {
   display: none !important;
 }
 </style>

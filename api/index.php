@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Json;
 use Symfony\Component\Debug\ErrorHandler;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+
 
 
 require_once __DIR__.'/vendor/autoload.php';
@@ -29,7 +31,6 @@ require_once __DIR__.'/helpers/functions.php';
 $app = new Silex\Application();
 
 $app->get('info', function (Request $request) use ($db, $loggedIn, $app) {
-    $res;
     $sql = "SELECT branchName, branchAdmin, instaUsername, facebookUsername, branchImage FROM `branch`";
     try {
         call_user_func($loggedIn, $request, $app);
@@ -39,6 +40,10 @@ $app->get('info', function (Request $request) use ($db, $loggedIn, $app) {
     $res["branches"] = $db->executeQuery($sql);
     $res["tabs"] = $db->executeQuery("SELECT tabName FROM `tabs`");
     return $res;
+});
+
+$app->get('', function (Request $request) {
+    return "Choose a route";
 });
 
 $app->post('enroll', function (Request $request) use ($db) {
@@ -60,6 +65,18 @@ $app->post('enroll', function (Request $request) use ($db) {
         return new Response("Aanmelding voltooid");
     }else{
         throw new HttpException(500,"Aanmelding niet verstuurd");
+    }
+});
+
+$app->post('order', function (Request $request) use ($db) {
+    $data = checkbody($request,["name","mail","postcode","housenumber","street","phone","orders","moment","type"]);
+    require_once __DIR__.'/helpers/sendMailMessage.php';
+    $check1 = sendOrderClient($data);
+    $check2 = sendOrderAdmin($data);
+    if($check1 && $check2){
+        return new Response("Bestelling voltooid, Er is een email verstuurd naar uw email adres.");
+    }else{
+        throw new HttpException(500,"Bestelling niet verstuurd, check alle velden");
     }
 });
 
@@ -85,7 +102,7 @@ $app->before($jsonBody);
 $app->after($resultToError);
 // https://www.scoutinghuissenzand.nl
 // http://localhost:8080
-header("Access-Control-Allow-Origin: http://localhost:8080");
+header("Access-Control-Allow-Origin: http://192.168.178.109:8080");
 header("Access-Control-Allow-Credentials: true");
 
 $method = $_SERVER['REQUEST_METHOD'];

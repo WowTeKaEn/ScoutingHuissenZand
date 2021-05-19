@@ -5,7 +5,7 @@
     </section>
 
     <section class="clean-block clean-info dark" style="position: relative">
-      <div class="section-decoration bottom"></div>
+      <SectionDecoration className="bottom"/>
       <b-container class="mt-5">
         <div class="block-heading">
           <h2 class="text-info">Speltakken</h2>
@@ -21,9 +21,8 @@
           </b-col>
         </b-row>
       </b-container>
-      <div class="section-decoration top"></div>
+      <SectionDecoration className="top"/>
     </section>
-
     <section
       v-if="albums  && albums.length > 0"
       class="p-0 py-5 photo-block"
@@ -41,10 +40,7 @@
       </b-container>
     </section>
     <section class="clean-block clean-info p-0 py-5" style="position: relative">
-      <div
-        style="background-color: white"
-        class="section-decoration bottom"
-      ></div>
+      <SectionDecoration color="white" className="bottom"/>
       <b-container>
         <div class="block-heading p-0">
           <h2 class="text-info">Evenementen</h2>
@@ -83,13 +79,14 @@ import calendarViewer from "@/components/content/events/calendarViewer";
 import albumViewer from "@/components/content/albumViewer";
 import quillViewer from "@/components/content/editor/quillViewer";
 import VueMixin from "@/main.js";
+import SectionDecoration from "@/components/layout/section-decoration.vue"
 
 
 
 export default {
   name: "Home",
   props: ["tabs", "branches"],
-  components: { teammember, carousel, calendarViewer, albumViewer, quillViewer },
+  components: { teammember, carousel, calendarViewer, SectionDecoration, albumViewer, quillViewer },
   data() {
     return {
       calendarReturned: false,
@@ -140,24 +137,7 @@ export default {
 </script>
 
 <style>
-.section-decoration {
-  background-color: #f6f6f6;
-  background-position: center top;
-  height: 20px;
-  width: 100%;
-  position: absolute;
-  left: 0;
-  z-index: 2;
-  mask: url(~@/assets/img/section-border.svg);
-  -webkit-mask: url(~@/assets/img/section-border.svg);
-}
-.section-decoration.top {
-  bottom: -20px;
-  transform: scale(-1, -1);
-}
-.section-decoration.bottom {
-  top: -20px;
-}
+
 
 .clean-block {
   background-color: white;

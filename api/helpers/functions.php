@@ -122,7 +122,7 @@ function getInfoPHP(){
     require_once __DIR__."/databaseAccess.php";
     $db = db::getInstance();
     $res;
-    $sql = "SELECT branchName, branchAdmin, instaUsername, facebookUsername FROM `branch`";
+    $sql = "SELECT branchName, branchAdmin, instaUsername, facebookUsername, branchImage FROM `branch`";
     if(!isset($_SESSION["user"]) || !$_SESSION["user"]["activated"]){
         $sql .= "where visible = 1";
     }

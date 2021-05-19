@@ -6,24 +6,24 @@ use PHPMailer\PHPMailer\Exception;
 
 class Mailer {
     private static $instance = null;
-    private static $mail = null;
 
-    private function __construct() {
-        self::$mail = new PHPMailer(true);
-        self::$mail->IsSMTP();
-        self::$mail->Host = 'smtp.yandex.com';
-        self::$mail->Port = 465;
-        self::$mail->SMTPAuth = true;
-        self::$mail->SMTPSecure = 'ssl';
-        self::$mail->SMTPOptions = array (
+    private function createMail() {
+        $mail = new PHPMailer(true);
+        $mail->IsSMTP();
+        $mail->Host = 'smtp.yandex.com';
+        $mail->Port = 465;
+        $mail->SMTPAuth = true;
+        $mail->SMTPSecure = 'ssl';
+        $mail->SMTPOptions = array (
         'ssl' => array(
         'verify_peer' => false,
         'verify_peer_name' => false,
         'allow_self_signed' => true));
-        self::$mail->Username = $_ENV["ADMIN_MAIL_FROM"];
-        self::$mail->Password = $_ENV["ADMIN_MAIL_PASSWORD"];
-        self::$mail->From = $_ENV["ADMIN_MAIL_FROM"];
-        self::$mail->FromName = $_ENV["ADMIN_NAME_FROM"];
+        $mail->Username = $_ENV["ADMIN_MAIL_FROM"];
+        $mail->Password = $_ENV["ADMIN_MAIL_PASSWORD"];
+        $mail->From = $_ENV["ADMIN_MAIL_FROM"];
+        $mail->FromName = $_ENV["ADMIN_NAME_FROM"];
+        return $mail;
     }
 
     public static function getInstance() {
@@ -42,11 +42,11 @@ class Mailer {
             $toName = $_ENV["ADMIN_NAME_TO"];
         }
         try {
-            $email = self::$mail;
+            $email = self::createMail();
             $email->AddAddress($toMail, $toName);
             $email->isHTML(true); 
             $email->Subject = $subject;
-            $email->Body = "<font size='4'>".$subject."</font><br><br>".$content."<br/><br/><hr/><br/>Dit is een automatisch gegenereerd bericht u kan hier niet op reageren.";
+            $email->Body = "<font size='4'>".$subject."</font><br/>".$content."<br/><hr/><br/>Dit is een automatisch gegenereerd bericht u kan hier niet op reageren.";
             $email->send();
             return 202;
         }

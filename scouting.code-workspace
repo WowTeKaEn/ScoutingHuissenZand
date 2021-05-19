@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"name": "/ — (Remote)",
+			"uri": "ftp://scouting/"
+		},
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "scoutingsite"
+	}
+}

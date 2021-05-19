@@ -1,5 +1,12 @@
 RewriteEngine on
 
+
+# DO NOT REMOVE THIS LINE AND THE LINES BELLOW SSL_REDIRECT:scoutinghuissenzand.nl
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP_HOST} (www\.)?scoutinghuissenzand.nl
+RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# DO NOT REMOVE THIS LINE AND THE LINES BELLOW SSL_REDIRECT:scoutinghuissenzand.nl
+
 # Serve gzip compressed CSS files if they exist 
 # and the client accepts gzip.
 RewriteCond "%{HTTP:Accept-encoding}" "gzip"
@@ -27,6 +34,7 @@ RewriteRule "\.js\.gz$" "-" [T=text/javascript,E=no-gzip:1]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ /index.php [NC,L,QSA]
+
 
 
 

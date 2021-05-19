@@ -1,6 +1,7 @@
 
     .modal.modal-fullscreen, .bootstrap-fs-modal .modal {
       box-shadow: 0px 0px 0px 100px #28a745;
+      overflow: hidden;
     }
     .modal.modal-fullscreen .modal-dialog, .bootstrap-fs-modal .modal .modal-dialog {
       margin: 0;
@@ -18,6 +19,7 @@
       line-height: 50px;
       padding: 0;
       background-color: #28a745;
+      border-radius: 0;
     }
     .modal.modal-fullscreen .modal-dialog .modal-content .modal-header .modal-title, .bootstrap-fs-modal .modal .modal-dialog .modal-content .modal-header .modal-title {
       white-space: nowrap;
@@ -54,13 +56,14 @@
     .modal.modal-fullscreen .modal-dialog .modal-content .modal-footer, .bootstrap-fs-modal .modal .modal-dialog .modal-content .modal-footer {
       top: 0;
       right: 0;
-      padding: 0 10px 0 0;
+      padding: 0 10px 0 10px;
       margin: 0 0 0 0;
       height: 50px;
       border-radius: 0px;
       min-height: 50px;
       line-height: 50px;
       background-color: #28a745;
+      color: white;
     }
     .modal.modal-fullscreen .modal-dialog .modal-content .modal-footer .btn, .bootstrap-fs-modal .modal .modal-dialog .modal-content .modal-footer .btn {
       border: none;

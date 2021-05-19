@@ -56,7 +56,7 @@ export default {
   },
   computed:{
     containsPage(){
-      return this.$route.path == "/index" || this.$route.path == "/" || isMobile() ? "page small-page" : "page";
+      return this.$route.path == "/index" || this.$route.path == "/"  || this.$route.path == "/oliebollen" || isMobile() ? "page small-page" : "page";
     }
   }
 };
